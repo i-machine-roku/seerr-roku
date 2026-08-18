@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="DashboardScreen" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/Screens/DashboardScreen.brs" />
+    <interface>
+        <field id="logout" type="boolean" value="false" />
+    </interface>
+    
+    <children>
+        <!-- Navigation Sidebar -->
+        <Rectangle id="sidebar" width="300" height="1080" color="0x111827FF">
+            <Poster uri="pkg:/images/logo.png" translation="[20, 30]" width="260" height="100" loadDisplayMode="scaleToFit" />
+            
+            <Rectangle width="280" height="2" color="0x334155FF" translation="[10, 140]" />
+            
+            <LabelList id="navList" translation="[30, 160]" itemSize="[240, 60]" numRows="10" vertFocusAnimationStyle="floatingFocus" color="0x94A3B8FF" focusedColor="0xFFFFFFFF" drawFocusFeedback="true" />
+            
+            <Group id="userProfileGroup" translation="[20, 980]">
+                <Poster id="userAvatar" width="50" height="50" loadDisplayMode="scaleToZoom" uri="pkg:/images/icon_focus_hd.png" />
+                <Label id="userNameLabel" translation="[65, 12]" font="font:MediumSystemFont" color="0xFFFFFFFF" text="Loading..." width="180" />
+            </Group>
+        </Rectangle>
+
+        <!-- Main Content Area -->
+        <Group id="contentGroup" translation="[340, 0]">
+            <!-- Categories layout for Discover -->
+            <RowList id="discoverList"
+                     translation="[0, 20]"
+                     itemComponentName="RequestItem"
+                     numRows="4"
+                     rowItemSize="[[250, 375]]"
+                     rowItemSpacing="[[20, 0]]"
+                     rowItemYOffset="[65]"
+                     showRowLabel="true"
+                     rowLabelOffset="[[0, 10]]"
+                     rowLabelFont="font:MediumBoldSystemFont"
+                     rowLabelColor="0xFFFFFFFF"
+                     rowFocusAnimationStyle="floatingFocus"
+                     drawFocusFeedback="true"
+                     visible="false" />
+                     
+            <!-- Grid layout for other tabs -->
+            <MarkupGrid id="requestList"
+                     translation="[30, 60]"
+                     itemComponentName="RequestItem"
+                     itemSize="[250, 400]"
+                     itemSpacing="[50, 50]"
+                     numColumns="5"
+                     numRows="2"
+                     drawFocusFeedback="true"
+                     vertFocusAnimationStyle="floatingFocus"
+                     visible="false" />
+
+            <Label id="statusLabel" translation="[0, 400]" text="Loading..." color="0xCCCCCCFF" />
+        </Group>
+        
+        <!-- API Task to fetch dashboard content -->
+        <ApiTask id="authMeTask" />
+        <DashboardTask id="fetchDashboardTask" />
+    </children>
+</component>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="DetailsTask" extends="Task">
+    <script type="text/brightscript" uri="pkg:/components/Tasks/DetailsTask.brs" />
+    <interface>
+        <field id="mediaId" type="integer" />
+        <field id="mediaType" type="string" />
+        <field id="response" type="assocarray" />
+    </interface>
+</component>

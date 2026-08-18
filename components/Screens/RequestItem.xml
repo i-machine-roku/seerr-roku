@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="RequestItem" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/Screens/RequestItem.brs" />
+    <interface>
+        <field id="itemContent" type="node" onChange="onContentChange" />
+    </interface>
+    
+    <children>
+        <Poster id="poster" width="250" height="375" loadDisplayMode="scaleToZoom" failedBitmapUri="pkg:/images/icon_focus_hd.png" />
+        
+        <Label id="statusLabel" translation="[10, 340]" width="230" font="font:SmallSystemFont" color="0xAAAAAAFF" />
+        
+        <ApiTask id="metadataTask" />
+    </children>
+</component>

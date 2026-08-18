@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="LoginScreen" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/Screens/LoginScreen.brs" />
+    <interface>
+        <field id="loginSuccess" type="boolean" value="false" />
+    </interface>
+    
+    <children>
+        <!-- A nice dark background gradient or solid color -->
+        <Rectangle id="background" width="1920" height="1080" color="0x0F172AFF" />
+        
+        <!-- Center the entire login form -->
+        <Group translation="[660, 250]">
+            <!-- A nice big logo -->
+            <Poster uri="pkg:/images/logo.png" 
+                    translation="[0, -100]" 
+                    width="600" 
+                    height="120" 
+                    loadDisplayMode="scaleToFit" />
+                   
+            <Label text="Please log in to continue" 
+                   translation="[120, 60]" 
+                   font="font:MediumSystemFont" 
+                   color="0x94A3B8FF" />
+
+            <Label id="statusLabel" 
+                   translation="[0, 130]" 
+                   width="600"
+                   horizAlign="center"
+                   font="font:SmallSystemFont" 
+                   color="0xEF4444FF" />
+
+            <Group id="inputGroup" translation="[0, 180]">
+                <!-- Custom nice buttons -->
+                <Button id="serverUrlBtn" 
+                        text="Server URL: https://" 
+                        translation="[100, 0]" 
+                        minWidth="400" />
+                        
+                <Button id="usernameBtn" 
+                        text="Enter Username" 
+                        translation="[100, 70]" 
+                        minWidth="400" />
+                        
+                <Button id="passwordBtn" 
+                        text="Enter Password" 
+                        translation="[100, 140]" 
+                        minWidth="400" />
+                        
+                <Button id="loginButton" 
+                        text="Login" 
+                        translation="[100, 230]" 
+                        minWidth="400" 
+                        iconUri="" 
+                        focusedIconUri="" />
+            </Group>
+        </Group>
+
+        <ApiTask id="authTask" />
+    </children>
+</component>

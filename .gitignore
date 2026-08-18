@@ -1,0 +1,18 @@
+# Build artifacts
+build/
+*.zip
+*.pkg
+
+# Logs and debug files
+*.log
+*.txt
+roku_debug.log
+search_debug.log
+
+# BrightScript/Roku specifics
+out/
+.roku/
+
+# OS generated files
+.DS_Store
+Thumbs.db

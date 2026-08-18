@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="DetailsScreen" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/Screens/DetailsScreen.brs" />
+    <interface>
+        <!-- The data passed from the dashboard/search -->
+        <field id="mediaData" type="assocarray" onChange="onMediaDataChange" />
+        <field id="requestData" type="assocarray" onChange="onRequestDataChange" />
+        <field id="isRequest" type="boolean" value="false" />
+        <field id="isIssue" type="boolean" value="false" />
+        
+        <field id="actionComplete" type="boolean" value="false" />
+    </interface>
+    
+    <children>
+        <Poster id="backdrop" width="1920" height="1080" loadDisplayMode="scaleToFill" failedBitmapUri="pkg:/images/splash_fhd.png" />
+        <Rectangle width="1920" height="1080" color="0x000000CC" /> <!-- Dimmer -->
+        
+        <!-- Left: Poster -->
+        <Poster id="poster" width="300" height="450" translation="[100, 80]" loadDisplayMode="scaleToFit" failedBitmapUri="pkg:/images/icon_focus_hd.png" />
+        
+        <!-- Right: Info -->
+        <Group translation="[450, 80]">
+            <Label id="titleLabel" font="font:LargeBoldSystemFont" color="0xFFFFFFFF" width="1100" wrap="true" />
+            <Label id="metaLabel" translation="[0, 60]" font="font:MediumSystemFont" color="0x94A3B8FF" />
+            <Label id="overviewLabel" translation="[0, 110]" font="font:MediumSystemFont" color="0xCCCCCCFF" width="1100" wrap="true" lineSpacing="5" maxLines="5" />
+            
+            <Label id="requestInfoLabel" translation="[950, 0]" font="font:MediumSystemFont" color="0x94A3B8FF" visible="false" horizAlign="right" width="400" />
+            <Label id="requestStatusLabel" translation="[950, 40]" font="font:MediumBoldSystemFont" color="0xFFFFFFFF" visible="false" horizAlign="right" width="400" />
+            
+            <!-- Buttons dynamically shown -->
+            <Group id="buttonGroup" translation="[0, 390]">
+                <Button id="requestBtn" text="Request" translation="[0, 0]" minWidth="160" iconUri="" focusedIconUri="" visible="false" />
+                <Button id="approveBtn" text="Approve" translation="[0, 0]" minWidth="160" iconUri="" focusedIconUri="" visible="false" />
+                <Button id="denyBtn" text="Deny" translation="[200, 0]" minWidth="120" iconUri="" focusedIconUri="" visible="false" />
+                <Button id="resolveBtn" text="Resolve Issue" translation="[0, 0]" minWidth="220" iconUri="" focusedIconUri="" visible="false" />
+                <Button id="issueBtn" text="Report Issue" translation="[0, 0]" minWidth="220" iconUri="" focusedIconUri="" />
+                <Button id="backBtn" text="Back" translation="[260, 0]" minWidth="120" iconUri="" focusedIconUri="" />
+            </Group>
+
+            <Label id="actionStatus" translation="[0, 480]" font="font:SmallSystemFont" color="0x10B981FF" />
+        </Group>
+
+        <!-- Extra details RowList (Cast, Recs, Similar) -->
+        <RowList id="extraList"
+                 translation="[100, 600]"
+                 itemComponentName="RequestItem"
+                 numRows="2"
+                 itemSize="[1720, 450]"
+                 rowItemSize="[[250, 400]]"
+                 rowItemSpacing="[[20, 0]]"
+                 showRowLabel="true"
+                 rowLabelOffset="[[0, 10]]"
+                 rowLabelFont="font:MediumBoldSystemFont"
+                 rowLabelColor="0xFFFFFFFF"
+                 visible="false" />
+
+        <!-- Tasks -->
+        <ApiTask id="metadataTask" />
+        <ApiTask id="actionTask" />
+        <DetailsTask id="detailsTask" />
+    </children>
+</component>

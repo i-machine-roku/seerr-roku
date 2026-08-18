@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="DashboardTask" extends="Task">
+    <script type="text/brightscript" uri="pkg:/components/Tasks/DashboardTask.brs" />
+    <interface>
+        <field id="activeTab" type="string" value="discover" />
+        <field id="sortBy" type="string" value="" />
+        <field id="response" type="assocarray" />
+    </interface>
+</component>

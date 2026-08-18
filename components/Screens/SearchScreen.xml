@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="SearchScreen" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/Screens/SearchScreen.brs" />
+    <interface>
+        <field id="backSelected" type="boolean" value="false" />
+        <field id="triggerSearch" type="boolean" value="false" alwaysNotify="true" onChange="onSearchBtnSelected" />
+    </interface>
+    
+    <children>
+        <Rectangle width="1920" height="1080" color="0x000000FF" />
+        
+        <Button id="searchBtn" text="New Search" translation="[80, 30]" minWidth="250" iconUri="" focusedIconUri="" />
+        <Label id="currentQueryLabel" translation="[380, 48]" font="font:MediumSystemFont" color="0xAAAAAAFF" />
+        
+        <Rectangle translation="[80, 110]" width="1760" height="2" color="0x444444FF" />
+        
+        <MarkupGrid id="resultList"
+                    translation="[80, 130]"
+                    itemComponentName="RequestItem"
+                    itemSize="[250, 400]"
+                    itemSpacing="[20, 20]"
+                    numColumns="6"
+                    numRows="2"
+                    drawFocusFeedback="true"
+                    vertFocusAnimationStyle="floatingFocus" />
+                 
+        <Label id="statusLabel" translation="[80, 150]" />
+        
+        <ApiTask id="searchTask" />
+    </children>
+</component>

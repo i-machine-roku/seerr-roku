@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="UserItem" extends="Group">
+    <script type="text/brightscript" uri="pkg:/components/Screens/UserItem.brs" />
+    <interface>
+        <field id="itemContent" type="node" onChange="onContentChange" />
+    </interface>
+    
+    <children>
+        <Rectangle id="background" width="250" height="250" color="0x1E293BFF" translation="[0, 0]" />
+        
+        <Poster id="avatar" width="120" height="120" translation="[65, 30]" loadDisplayMode="scaleToZoom" />
+        
+        <Label id="usernameLabel" translation="[10, 170]" width="230" horizAlign="center" font="font:MediumSystemFont" color="0xFFFFFFFF" />
+        <Label id="emailLabel" translation="[10, 210]" width="230" horizAlign="center" font="font:SmallSystemFont" color="0x94A3B8FF" />
+    </children>
+</component>
