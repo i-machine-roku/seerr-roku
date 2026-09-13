@@ -1,12 +1,39 @@
 sub init()
     m.contentGroup = m.top.findNode("contentGroup")
+    m.eggPresses = 0
+    m.eggLastPress = 0
     sec = CreateObject("roRegistrySection", "SeerrAuth")
-    
+
     if sec.Exists("connectSid") then
         showDashboard()
     else
         showLogin()
     end if
+end sub
+
+' Undocumented: mash "rewind" 5x within 2s of each other, from anywhere in the
+' app, for a small thank-you. See CODING_NOTES.md "Easter Eggs".
+function onKeyEvent(key as String, press as Boolean) as Boolean
+    if press and key = "rewind" then
+        now = CreateObject("roDateTime").AsSeconds()
+        if now - m.eggLastPress > 2 then m.eggPresses = 0
+        m.eggLastPress = now
+        m.eggPresses = m.eggPresses + 1
+        if m.eggPresses >= 5 then
+            m.eggPresses = 0
+            showEasterEgg()
+            return true
+        end if
+    end if
+    return false
+end function
+
+sub showEasterEgg()
+    dialog = CreateObject("roSGNode", "Dialog")
+    dialog.title = "You found it"
+    dialog.message = "Thanks for actually reading the source. Go request something good."
+    dialog.buttons = ["Nice"]
+    m.top.dialog = dialog
 end sub
 
 sub showLogin()
