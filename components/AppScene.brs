@@ -33,7 +33,12 @@ sub showEasterEgg()
     dialog.title = "You found it"
     dialog.message = "Thanks for actually reading the source. Go request something good."
     dialog.buttons = ["Nice"]
+    dialog.observeField("buttonSelected", "onEasterEggDismissed")
     m.top.dialog = dialog
+end sub
+
+sub onEasterEggDismissed()
+    m.top.dialog.close = true
 end sub
 
 sub showLogin()
