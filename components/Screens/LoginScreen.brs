@@ -6,11 +6,17 @@ sub init()
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
     
+    sec = CreateObject("roRegistrySection", "SeerrAuth")
     m.serverUrl = ""
+    if sec.Exists("serverUrl") then m.serverUrl = sec.Read("serverUrl")
     m.username = ""
     m.password = ""
 
-    m.serverUrlBtn.text = "Server URL: (tap to set)"
+    if m.serverUrl <> "" then
+        m.serverUrlBtn.text = "Server URL: " + m.serverUrl
+    else
+        m.serverUrlBtn.text = "Server URL: (tap to set)"
+    end if
     m.usernameBtn.text = "Username: (tap to set)"
     m.passwordBtn.text = "Password: (tap to set)"
     
