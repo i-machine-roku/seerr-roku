@@ -32,13 +32,13 @@ Grab your Roku remote and enter the following sequence rapidly to open the Devel
 Follow the on-screen prompts to enable Developer Mode. It will ask you to set a webserver password. Make sure to write down the **IP Address** and **Password** it gives you!
 
 ### Step 2: Download the App
-Download the latest `seerr-roku.zip` release package from the [Releases](../../releases) tab on this GitHub repository (or build it from source).
+Download the latest release `.zip` package from the [Releases](../../releases) tab on this GitHub repository (or build it from source).
 
 ### Step 3: Install the App
 1. Open a web browser on your computer or phone (must be on the same local network as your Roku).
 2. Type in your Roku's IP address (e.g., `http://192.168.0.45`).
 3. Log in with the username `rokudev` and the password you created in Step 1.
-4. Click **Upload** and select the `seerr-roku.zip` file.
+4. Click **Upload** and select the `.zip` file you downloaded.
 5. Click **Install**. 
 
 The app will immediately launch on your TV!
@@ -48,10 +48,10 @@ The app will immediately launch on your TV!
 ## ⚙️ Configuration
 
 When you launch SeerrRoku for the first time, you will be presented with a login screen.
-1. **Server URL:** Enter the full URL to your Overseerr or Jellyseerr instance (e.g., `https://request.mydomain.com`). Make sure to include `http://` or `https://`.
-2. **Username & Password:** Enter your Overseerr credentials. 
+1. **Server URL:** Enter the full URL to your Overseerr or Jellyseerr instance (e.g., `https://request.mydomain.com`). Make sure to include `http://` or `https://`. If you use `http://`, you'll be shown a warning before your credentials are sent unencrypted — `https://` is strongly recommended.
+2. **Username & Password:** Enter your Jellyfin sign-in credentials. **Note:** login currently only supports Jellyfin-backed authentication — if your instance uses plain Overseerr local accounts (no Jellyfin), login will not work yet.
 
-The app securely stores your session token locally on your Roku's secure registry and connects directly to your server. 
+The app securely stores your server URL and session token locally on your Roku's registry and connects directly to your server. Your server URL is remembered after logging out; your username and password are not.
 
 ---
 
