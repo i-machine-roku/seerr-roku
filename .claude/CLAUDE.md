@@ -6,10 +6,12 @@ You are a senior software developer. These rules override your default behavior.
 
 ## Project Overview
 
-**SeerrRoku** — a native BrightScript/Roku channel client for a self-hosted Overseerr or
-Jellyseerr instance: browse trending media, search, request titles, approve/deny requests,
-and report issues from the Roku remote. Third-party, unofficial, sideload-only (not distributed
-through the Roku Channel Store).
+**SeerrRoku** — a native BrightScript/Roku channel client for a self-hosted Seerr instance
+(Overseerr and Jellyseerr merged into Seerr in Feb 2026; both are now deprecated/sunset — see
+README's "Learn More" section): browse trending media, search, request titles, approve/deny
+requests, and report issues from the Roku remote. Third-party, unofficial, sideload-only (not
+distributed through the Roku Channel Store). Login only implements Jellyfin-backed auth
+(`/api/v1/auth/jellyfin`) — Plex OAuth and local accounts are not supported.
 
 Key files:
 - `source/main.brs` — channel entry point, creates the root scene.
@@ -20,7 +22,8 @@ Key files:
 - `components/Screens/DashboardScreen.brs`, `SearchScreen.brs`, `DetailsScreen.brs`,
   `RequestItem.brs`, `UserItem.brs` — the main browse/search/detail/action UI.
 - `components/Tasks/ApiTask.brs`, `DashboardTask.brs`, `DetailsTask.brs` — async `roUrlTransfer`
-  calls against the Overseerr/Jellyseerr REST API (`/api/v1/...`), run off the render thread.
+  calls against the Seerr/Jellyseerr REST API (`/api/v1/...`, unchanged by the Seerr merger),
+  run off the render thread.
 - `manifest` — Roku channel metadata (version, resolutions, icons).
 - `docs/PRIVACY_POLICY.md`, `docs/TERMS_OF_USE.md` — user-facing legal docs bundled in the repo.
 
