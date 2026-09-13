@@ -1,8 +1,8 @@
 sub init()
     m.contentGroup = m.top.findNode("contentGroup")
     sec = CreateObject("roRegistrySection", "SeerrAuth")
-    
-    if sec.Exists("connectSid") then
+
+    if sec.Exists("connectSid") and sec.Exists("serverUrl") then
         showDashboard()
     else
         showLogin()
