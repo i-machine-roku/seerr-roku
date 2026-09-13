@@ -183,6 +183,6 @@ sub onAuthResponse()
         
         m.top.loginSuccess = true
     else
-        m.statusLabel.text = "Login failed. Code: " + resp.code.toStr()
+        m.statusLabel.text = "Login failed. Code: " + resp.code.toStr() + " Body: " + Left(resp.body, 200)
     end if
 end sub
