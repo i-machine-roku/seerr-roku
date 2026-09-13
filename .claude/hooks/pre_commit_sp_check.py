@@ -90,7 +90,11 @@ def main():
 
     # Hardcoded password/credential literal (the leak this project shipped once already)
     for line in added_lines:
-        if re.search(r'(?i)\b\w*password\w*\s*[:=]\s*"[^"]+"', line):
+        if re.search(
+            r"""(?i)\b(?:[A-Za-z_]\w*\.)*(?:[A-Za-z_]\w*)?password\w*"""
+            r"""(?:\.[A-Za-z_]\w*)*\s*[:=]\s*(["']).+\1""",
+            line,
+        ):
             warnings.append(
                 "Hardcoded password literal detected — this project already shipped a real "
                 "admin password as a UI default once. Use an empty default, never a real value."
