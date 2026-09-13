@@ -1,16 +1,19 @@
 <div align="center">
   <img src="images/logo.png" alt="SeerrRoku Logo" width="250">
   <h1>SeerrRoku</h1>
-  <p>A native Roku client for your self-hosted Jellyseerr instance.</p>
+  <p>A native Roku client for your self-hosted Seerr (or Jellyseerr) instance.</p>
 </div>
 
 ---
 
 ## 📖 Learn More
 
-**SeerrRoku** brings the power of [Jellyseerr](https://github.com/Fallenbagel/jellyseerr) directly to your living room. Instead of pulling out your phone or opening a web browser to request a movie or TV show, you can now browse trending media, search for titles, and manage your requests seamlessly using your Roku remote.
+**SeerrRoku** brings the power of [Seerr](https://github.com/seerr-team/seerr) directly to your living room. Instead of pulling out your phone or opening a web browser to request a movie or TV show, you can now browse trending media, search for titles, and manage your requests seamlessly using your Roku remote.
 
-**Requires Jellyseerr, not Overseerr.** Jellyseerr is a separate, Jellyfin/Emby-native fork of Overseerr — it isn't a setting you enable inside Overseerr itself. This app authenticates with your Jellyfin account credentials via Jellyseerr's Jellyfin login endpoint, so it only works against a Jellyseerr instance connected to a Jellyfin (or Emby) server. If you're currently running plain Overseerr, you'd need to run Jellyseerr instead (they're independent apps with separate databases — see [Fallenbagel/jellyseerr](https://github.com/Fallenbagel/jellyseerr) for setup).
+**Requires Jellyfin-backed authentication.** This app logs in via your server's Jellyfin credentials, not a Plex or local account, so it needs a server with Jellyfin (or Emby) auth available:
+- **[Seerr](https://github.com/seerr-team/seerr)** — the current, actively maintained project (Overseerr and Jellyseerr merged into it; both are now deprecated, sunset since May 2026). This is what you should deploy today if starting fresh. Seerr supports Plex, Jellyfin, and Emby — point this app at a Seerr instance connected to Jellyfin/Emby.
+- **Jellyseerr** — the predecessor Jellyfin/Emby-native fork of Overseerr. Still works with this app if you haven't migrated yet, but it's deprecated upstream.
+- **Plain Overseerr** (Plex-only, no Jellyfin support) — **not compatible.** Jellyfin auth was never a setting inside Overseerr itself; you need Seerr or Jellyseerr instead.
 
 ### ✨ Features
 * **Discover Dashboard:** Browse trending movies, upcoming TV shows, and recommendations natively on your TV.
@@ -50,8 +53,8 @@ The app will immediately launch on your TV!
 ## ⚙️ Configuration
 
 When you launch SeerrRoku for the first time, you will be presented with a login screen.
-1. **Server URL:** Enter the full URL to your Jellyseerr instance (e.g., `https://request.mydomain.com`). Make sure to include `http://` or `https://`. If you use `http://`, you'll be shown a warning before your credentials are sent unencrypted — `https://` is strongly recommended.
-2. **Username & Password:** Enter your **Jellyfin** sign-in credentials (the same ones you use to log into Jellyfin itself) — not a separate Overseerr/Jellyseerr local account.
+1. **Server URL:** Enter the full URL to your Seerr or Jellyseerr instance (e.g., `https://request.mydomain.com`). Make sure to include `http://` or `https://`. If you use `http://`, you'll be shown a warning before your credentials are sent unencrypted — `https://` is strongly recommended.
+2. **Username & Password:** Enter your **Jellyfin** sign-in credentials (the same ones you use to log into Jellyfin itself) — not a Plex or local Seerr/Overseerr account.
 
 The app securely stores your server URL and session token locally on your Roku's registry and connects directly to your server. Your server URL is remembered after logging out; your username and password are not.
 
@@ -60,4 +63,4 @@ The app securely stores your server URL and session token locally on your Roku's
 ## ⚖️ Legal & Privacy
 
 * **Privacy:** This application does not collect, store, or transmit any telemetry or personal data to the developer. All communication is strictly between your Roku device and your self-hosted server. Please review our [Privacy Policy](docs/PRIVACY_POLICY.md) for more details.
-* **Terms of Use:** This is an unofficial, third-party client. It is provided "as is" and is not officially affiliated with Overseerr, Jellyfin, or Roku Inc. Please review our [Terms of Use](docs/TERMS_OF_USE.md).
+* **Terms of Use:** This is an unofficial, third-party client. It is provided "as is" and is not officially affiliated with Seerr, Jellyfin, or Roku Inc. Please review our [Terms of Use](docs/TERMS_OF_USE.md).
