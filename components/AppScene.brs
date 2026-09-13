@@ -4,7 +4,7 @@ sub init()
     m.eggLastPress = 0
     sec = CreateObject("roRegistrySection", "SeerrAuth")
 
-    if sec.Exists("connectSid") then
+    if sec.Exists("connectSid") and sec.Exists("serverUrl") then
         showDashboard()
     else
         showLogin()

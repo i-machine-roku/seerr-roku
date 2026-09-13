@@ -11,6 +11,7 @@
 
 - **Never reference an `m.` field in a Task/Screen that was never assigned in `init()`.** BrightScript returns `invalid` for an unset `m.` member instead of erroring at parse time, so `m.someField.visible = false` crashes at runtime, not at review time. Grep for the field name back to its `init()` assignment before trusting it exists.
 - `getServerUrl()`/registry-read logic is duplicated near-identically across `LoginScreen.brs`, `SearchScreen.brs`, `DetailsScreen.brs`, `DashboardScreen.brs`, `DashboardTask.brs`, `DetailsTask.brs`, `RequestItem.brs`, `UserItem.brs`. Worth extracting into a shared library (`source/Constants.brs` or similar) next time it needs to change — duplication is exactly how the hardcoded-URL leak spread to 8 files instead of 1.
+- `AppScene`'s login/dashboard routing checks `SeerrAuth.serverUrl` existing, not just `connectSid` — a registry with a session cookie but no server URL (partial/corrupted state) must route to login, not into a dashboard that would issue relative `/api/v1/...` requests.
 
 ## Easter Eggs
 
