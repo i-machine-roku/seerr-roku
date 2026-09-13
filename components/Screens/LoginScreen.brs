@@ -6,13 +6,13 @@ sub init()
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
     
-    m.serverUrl = "https://request.cybermc.site"
-    m.username = "admin"
-    m.password = "qtip1"
-    
-    m.serverUrlBtn.text = "Server URL: " + m.serverUrl
-    m.usernameBtn.text = "Username: " + m.username
-    m.passwordBtn.text = "Password: *****"
+    m.serverUrl = ""
+    m.username = ""
+    m.password = ""
+
+    m.serverUrlBtn.text = "Server URL: (tap to set)"
+    m.usernameBtn.text = "Username: (tap to set)"
+    m.passwordBtn.text = "Password: (tap to set)"
     
     m.serverUrlBtn.observeField("buttonSelected", "onServerUrlSelected")
     m.usernameBtn.observeField("buttonSelected", "onUsernameSelected")
@@ -122,7 +122,7 @@ sub onLoginSelected()
 
     m.statusLabel.text = "Logging in..."
     m.authTask.requestData = {
-        url: m.serverUrl + "/api/v1/auth/jellyfin" ' We assume Jellyfin for now, Overseerr auth is complex. The URL shouldn't be hardcoded to cybermc.
+        url: m.serverUrl + "/api/v1/auth/jellyfin" ' TODO: only Jellyfin-backed auth is supported; plain Overseerr local auth needs its own flow.
         method: "POST"
         body: {
             username: m.username,
