@@ -6,15 +6,11 @@ on:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # Lint — bslint (BrightScript static analysis).
-  # continue-on-error until a real PR confirms it runs clean on GitHub's
-  # runners (no Node available in this project's local dev environment to
-  # verify bsconfig.json against beforehand). Flip to blocking once verified.
+  # Lint — bslint (BrightScript static analysis). Verified clean on PR #1.
   # ---------------------------------------------------------------------------
   lint:
     name: Lint (bslint)
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v4
