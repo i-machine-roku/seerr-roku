@@ -14,6 +14,12 @@
 - `AppScene`'s login/dashboard routing checks `SeerrAuth.serverUrl` existing, not just `connectSid` — a registry with a session cookie but no server URL (partial/corrupted state) must route to login, not into a dashboard that would issue relative `/api/v1/...` requests.
 - A legacy `Dialog` node's `buttons` press only sets `buttonSelected` — it does **not** dismiss the dialog. Always `observeField("buttonSelected", ...)` and explicitly set `dialog.close = true` in the handler, or the dialog stays stuck until Back.
 
+## CI / GitHub Actions
+
+- **Never interpolate a GitHub Actions expression directly into a `run:` shell block** (e.g. `"${{ github.ref_name }}"` inside `bash`) — ref/branch/tag names can contain shell metacharacters (`$()`, backticks) and this is a documented script-injection vector (CWE-78). Pass it through `env:` and reference the env var instead.
+- A job using `softprops/action-gh-release` (or anything writing releases/PRs) needs an explicit `permissions: contents: write` block — don't rely on the repo/org default, which can be read-only.
+- `release.yml`'s tag-push trigger accepts a tag on any commit, not just one that's actually merged to `main`. It fetches `origin/main` and runs `git merge-base --is-ancestor "$GITHUB_SHA" origin/main` before packaging, failing the job otherwise, so a tag can't bypass the Rule 4 "only tag from main" gate.
+
 ## Easter Eggs
 
 - `components/AppScene.brs::onKeyEvent` — press the remote's "rewind" key 5 times within 2 seconds of each other, from any screen (it bubbles up to the Scene only when no focused child handles it). Shows a small thank-you dialog. Not mentioned anywhere user-facing.
