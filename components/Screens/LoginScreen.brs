@@ -120,6 +120,27 @@ sub onLoginSelected()
         return
     end if
 
+    if LCase(m.serverUrl).StartsWith("http://") then
+        dialog = CreateObject("roSGNode", "Dialog")
+        dialog.title = "Insecure Connection"
+        dialog.message = "This server URL uses http://, not https://. Your username and password will be sent unencrypted. Continue anyway?"
+        dialog.buttons = ["Continue", "Cancel"]
+        dialog.observeField("buttonSelected", "onHttpWarningComplete")
+        m.top.getScene().dialog = dialog
+        return
+    end if
+
+    doLogin()
+end sub
+
+sub onHttpWarningComplete(event)
+    dialog = event.getRoSGNode()
+    proceed = (dialog.buttonSelected = 0) ' Continue
+    dialog.close = true
+    if proceed then doLogin()
+end sub
+
+sub doLogin()
     m.statusLabel.text = "Logging in..."
     m.authTask.requestData = {
         url: m.serverUrl + "/api/v1/auth/jellyfin" ' TODO: only Jellyfin-backed auth is supported; plain Overseerr local auth needs its own flow.

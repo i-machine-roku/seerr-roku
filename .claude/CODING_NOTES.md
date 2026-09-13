@@ -6,6 +6,7 @@
 
 - **Never hardcode a real server URL, username, or password as a UI default or fallback value.** The pre-fork version of this app shipped `admin`/a real password pre-filled on the login screen, plus the same real server URL hardcoded as a fallback in 8 files. Defaults must be empty strings; screens should just skip the request if nothing is configured yet.
 - The `pre_commit_sp_check.py` hook flags any added line assigning a literal string (single- or double-quoted, including `m.x.y.password = "..."` member-access chains) to a field whose name contains "password". CI's `security` job runs gitleaks on every PR for the same reason.
+- Prefer HTTPS by default: `LoginScreen.brs` shows an explicit interstitial warning (cleartext credentials, CWE-319) before logging in over `http://`, requiring the user to confirm rather than silently proceeding.
 
 ## BrightScript / Roku Task Patterns
 
