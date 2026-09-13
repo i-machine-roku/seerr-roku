@@ -46,7 +46,10 @@ sub showLogin()
     m.loginView = CreateObject("roSGNode", "LoginScreen")
     m.loginView.observeField("loginSuccess", "onLoginSuccess")
     m.contentGroup.appendChild(m.loginView)
-    m.loginView.setFocus(true)
+    ' Don't setFocus on m.loginView itself here — LoginScreen.init() already
+    ' focuses its serverUrlBtn. Re-focusing the wrapper Group steals that
+    ' back onto a non-visual node, so the first arrow-key press is wasted on
+    ' Roku's default focus recovery instead of moving between actual fields.
 end sub
 
 sub showDashboard()
