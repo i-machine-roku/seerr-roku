@@ -79,7 +79,7 @@ When you launch SeerrRoku for the first time, you will be presented with a login
 1. **Server URL:** Enter the full URL to your Seerr or Jellyseerr instance (e.g., `https://request.mydomain.com`). Make sure to include `http://` or `https://`. If you use `http://`, you'll be shown a warning before your credentials are sent unencrypted — `https://` is strongly recommended.
 2. **Username & Password:** Enter your **Jellyfin** sign-in credentials (the same ones you use to log into Jellyfin itself) — not a Plex or local Seerr/Overseerr account.
 
-The app securely stores your server URL and session token locally on your Roku's registry and connects directly to your server. Logging out via the Dashboard's Logout option clears all of it; your password is never stored in the first place.
+The app securely stores your server URL and session token locally on your Roku's registry and connects directly to your server. Your server URL is remembered after logging out; your username and password are not.
 
 ---
 

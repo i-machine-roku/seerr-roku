@@ -60,16 +60,7 @@ sub showDashboard()
     m.dashboardView.setFocus(true)
 end sub
 
-' The Dashboard's "Logout" item only flipped m.top.logout to swap the current view back
-' to LoginScreen — it never actually cleared SeerrAuth, so the session silently came back
-' on the next app launch (AppScene.init()'s registry check would still find it). Logout
-' needs to actually forget the session, not just navigate away from it.
 sub onLogout()
-    sec = CreateObject("roRegistrySection", "SeerrAuth")
-    sec.Delete("connectSid")
-    sec.Delete("serverUrl")
-    sec.Delete("lastUsername")
-    sec.Flush()
     showLogin()
 end sub
 
