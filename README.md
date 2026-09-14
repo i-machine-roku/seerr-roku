@@ -15,6 +15,29 @@
 - **Jellyseerr** — the predecessor Jellyfin/Emby-native fork of Overseerr. Still works with this app if you haven't migrated yet, but it's deprecated upstream.
 - **Plain Overseerr** (Plex-only, no Jellyfin support) — **not compatible.** Jellyfin auth was never a setting inside Overseerr itself; you need Seerr or Jellyseerr instead.
 
+### 🖼️ Screenshots
+
+> **Placeholders, not real device captures.** These are rendered mockups built from the actual SceneGraph layout/colors, not screenshots taken on a Roku — real captures are easy to get (see below) and these should be swapped for the genuine article. The login screen mockup also depicts the in-progress restyle from #4, not what's currently on `main`.
+
+| Login | Dashboard |
+| --- | --- |
+| ![Login screen (placeholder mockup)](docs/screenshots/login-placeholder.png) | ![Dashboard screen (placeholder mockup)](docs/screenshots/dashboard-placeholder.png) |
+
+<details>
+<summary>How to capture real screenshots from a Roku</summary>
+
+With Developer Mode already enabled (see Installation below), Roku has a built-in capture tool — no extra software needed. Note this only captures the sideloaded app's own UI (screens like the ones above), not video/content playback.
+
+- **From the browser:** open the same developer web installer page you use to sideload (`http://<roku-ip>`, logged in as `rokudev`) — there's a **Screenshot** link that captures and downloads the app's current screen.
+- **From the command line** (requires the same `rokudev` credentials as the web installer — the dev web server rejects unauthenticated requests). Passing just the username makes `curl` prompt for the password interactively, so it's never typed into a command or a file:
+  ```bash
+  curl -u rokudev -d '' http://<roku-ip>:8060/plugin_inspect
+  curl -u rokudev http://<roku-ip>:8060/pkgs/dev.jpg -o screenshot.jpg
+  ```
+  Navigate to the screen you want first, then run both commands (each will ask for the dev password once).
+
+</details>
+
 ### ✨ Features
 * **Discover Dashboard:** Browse trending movies, upcoming TV shows, and recommendations natively on your TV.
 * **Search:** Search the full TMDB library directly from your Roku using the standard Roku keyboard interface.

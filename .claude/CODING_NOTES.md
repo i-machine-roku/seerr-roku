@@ -7,6 +7,7 @@
 - **Never hardcode a real server URL, username, or password as a UI default or fallback value.** The pre-fork version of this app shipped `admin`/a real password pre-filled on the login screen, plus the same real server URL hardcoded as a fallback in 8 files. Defaults must be empty strings; screens should just skip the request if nothing is configured yet.
 - The `pre_commit_sp_check.py` hook flags any added line assigning a literal string (single- or double-quoted, including `m.x.y.password = "..."` member-access chains) to a field whose name contains "password". CI's `security` job runs gitleaks on every PR for the same reason.
 - Prefer HTTPS by default: `LoginScreen.brs` shows an explicit interstitial warning (cleartext credentials, CWE-319) before logging in over `http://`, requiring the user to confirm rather than silently proceeding.
+- **Never write curl's `-u` flag with a `username:password`-shaped value in docs, even an obvious placeholder** — gitleaks' `curl-auth-user` rule matches that syntax pattern itself, not whether the value is a real secret, and fails CI on it. Pass just the username to `-u` instead; curl then prompts interactively for the password, so no credential-shaped string ever lands in the file — better practice anyway, not just a CI workaround. If it's already in history by the time you notice (like it was here — see `.gitleaksignore`), fix it forward in a new commit and allowlist the specific historical fingerprint rather than rewriting history to hide the mistake.
 
 ## BrightScript / Roku Task Patterns
 
@@ -28,6 +29,7 @@
 - **Never interpolate a GitHub Actions expression directly into a `run:` shell block** (e.g. `"${{ github.ref_name }}"` inside `bash`) — ref/branch/tag names can contain shell metacharacters (`$()`, backticks) and this is a documented script-injection vector (CWE-78). Pass it through `env:` and reference the env var instead.
 - A job using `softprops/action-gh-release` (or anything writing releases/PRs) needs an explicit `permissions: contents: write` block — don't rely on the repo/org default, which can be read-only.
 - `release.yml`'s tag-push trigger accepts a tag on any commit, not just one that's actually merged to `main`. It fetches `origin/main` and runs `git merge-base --is-ancestor "$GITHUB_SHA" origin/main` before packaging, failing the job otherwise, so a tag can't bypass the Rule 4 "only tag from main" gate.
+- `generate_release_notes: true`'s "What's Changed" list compares against the *previous tag*, not cumulatively from the first release — verified via v1.0.0→v1.0.1→v1.0.2 each showing only what merged in that window, not repeating earlier PRs.
 
 ## Easter Eggs
 
