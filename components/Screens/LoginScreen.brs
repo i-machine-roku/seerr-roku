@@ -5,7 +5,21 @@ sub init()
     m.loginButton = m.top.findNode("loginButton")
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
-    
+
+    m.backdropA = m.top.findNode("backdropA")
+    m.backdropB = m.top.findNode("backdropB")
+    m.backdropTimer = m.top.findNode("backdropTimer")
+    m.backdropsTask = m.top.findNode("backdropsTask")
+    m.backdropCrossfade = m.top.findNode("backdropCrossfade")
+    m.fadeOutInterp = m.top.findNode("fadeOutInterp")
+    m.fadeInInterp = m.top.findNode("fadeInInterp")
+    m.backdropPaths = []
+    m.backdropIndex = -1
+    ' "active" = currently visible (opacity 1); starts on B so the first reveal fades A in
+    ' against a harmless no-op on B (already at opacity 0).
+    m.activeBackdrop = m.backdropB
+    m.hiddenBackdrop = m.backdropA
+
     sec = CreateObject("roRegistrySection", "SeerrAuth")
     m.serverUrl = ""
     if sec.Exists("serverUrl") then m.serverUrl = sec.Read("serverUrl")
@@ -19,14 +33,57 @@ sub init()
     end if
     m.usernameBtn.text = "Username: (tap to set)"
     m.passwordBtn.text = "Password: (tap to set)"
-    
+
     m.serverUrlBtn.observeField("buttonSelected", "onServerUrlSelected")
     m.usernameBtn.observeField("buttonSelected", "onUsernameSelected")
     m.passwordBtn.observeField("buttonSelected", "onPasswordSelected")
     m.loginButton.observeField("buttonSelected", "onLoginSelected")
     m.authTask.observeField("response", "onAuthResponse")
-    
+    m.backdropsTask.observeField("response", "onBackdropsResponse")
+    m.backdropTimer.observeField("fire", "onBackdropTimerFire")
+
+    ' Rotating backdrops (matching Seerr's own login) need a known server to ask
+    ' /api/v1/backdrops on — a first-time user hasn't told us one yet, so this only
+    ' runs for a returning user whose serverUrl is already persisted.
+    if m.serverUrl <> "" then
+        m.backdropsTask.requestData = { url: m.serverUrl + "/api/v1/backdrops", method: "GET" }
+        m.backdropsTask.control = "RUN"
+    end if
+
     m.serverUrlBtn.setFocus(true)
+end sub
+
+sub onBackdropsResponse()
+    resp = m.backdropsTask.response
+    if resp = invalid or resp.code <> 200 then return
+
+    paths = ParseJson(resp.body)
+    if paths = invalid or paths.Count() = 0 then return
+
+    m.backdropPaths = paths
+    showNextBackdrop()
+    m.backdropTimer.control = "start"
+end sub
+
+sub onBackdropTimerFire()
+    showNextBackdrop()
+end sub
+
+' Crossfades to the next trending backdrop, matching Seerr's ImageFader (6s rotation,
+' 300ms opacity crossfade — see backdropTimer/backdropCrossfade in LoginScreen.xml).
+sub showNextBackdrop()
+    if m.backdropPaths.Count() = 0 then return
+
+    m.backdropIndex = (m.backdropIndex + 1) mod m.backdropPaths.Count()
+    m.hiddenBackdrop.uri = "https://image.tmdb.org/t/p/w1280" + m.backdropPaths[m.backdropIndex]
+
+    m.fadeOutInterp.fieldToInterp = m.activeBackdrop.id + ".opacity"
+    m.fadeInInterp.fieldToInterp = m.hiddenBackdrop.id + ".opacity"
+    m.backdropCrossfade.control = "start"
+
+    temp = m.activeBackdrop
+    m.activeBackdrop = m.hiddenBackdrop
+    m.hiddenBackdrop = temp
 end sub
 
 sub onServerUrlSelected()
@@ -180,7 +237,8 @@ sub onAuthResponse()
         sec.Write("connectSid", cookieStr)
         sec.Write("serverUrl", m.serverUrl)
         sec.Flush()
-        
+
+        m.backdropTimer.control = "stop"
         m.top.loginSuccess = true
     else
         m.statusLabel.text = "Login failed. Code: " + resp.code.toStr() + " Body: " + Left(resp.body, 200)
