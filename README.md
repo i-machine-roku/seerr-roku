@@ -80,7 +80,7 @@ When you launch SeerrRoku for the first time, you will be presented with a login
 2. **Username & Password:** Enter your **Jellyfin** sign-in credentials (the same ones you use to log into Jellyfin itself) — not a Plex or local Seerr/Overseerr account.
 3. **Save credentials on this device:** A toggle button, ON by default. Leave it ON to skip re-entering your server URL and username next time you launch the app; switch it OFF if this is a shared or borrowed Roku and you'd rather nothing survive after you close the app.
 
-The app securely stores your server URL, username, and session token locally on your Roku's registry and connects directly to your server. Your password is never stored. If "Save credentials on this device" is OFF, everything above is forgotten as soon as you close the app instead of surviving to your next launch.
+The app securely stores your server URL, username, and session token locally on your Roku's registry and connects directly to your server. Your password is never stored. Logging out via the Dashboard's Logout option clears all of it immediately; if "Save credentials on this device" is OFF, it's also cleared automatically as soon as you close the app, even without logging out first.
 
 ---
 
