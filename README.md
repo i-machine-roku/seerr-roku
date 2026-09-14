@@ -26,13 +26,13 @@
 <details>
 <summary>How to capture real screenshots from a Roku</summary>
 
-With Developer Mode already enabled (see Installation below), Roku has a built-in capture tool — no extra software needed:
+With Developer Mode already enabled (see Installation below), Roku has a built-in capture tool — no extra software needed. Note this only captures the sideloaded app's own UI (screens like the ones above), not video/content playback.
 
-- **From the browser:** open the same developer web installer page you use to sideload (`http://<roku-ip>`, logged in as `rokudev`) — there's a **Screenshot** link that captures and downloads whatever's currently on screen.
-- **From the command line:**
+- **From the browser:** open the same developer web installer page you use to sideload (`http://<roku-ip>`, logged in as `rokudev`) — there's a **Screenshot** link that captures and downloads the app's current screen.
+- **From the command line** (requires the same `rokudev` credentials as the web installer — the dev web server rejects unauthenticated requests):
   ```bash
-  curl -d '' http://<roku-ip>:8060/plugin_inspect
-  curl http://<roku-ip>:8060/pkgs/dev.jpg -o screenshot.jpg
+  curl -u rokudev:YOUR_DEV_PASSWORD -d '' http://<roku-ip>:8060/plugin_inspect
+  curl -u rokudev:YOUR_DEV_PASSWORD http://<roku-ip>:8060/pkgs/dev.jpg -o screenshot.jpg
   ```
   Navigate to the screen you want first, then run both commands.
 
