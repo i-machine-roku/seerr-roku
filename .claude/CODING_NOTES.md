@@ -23,6 +23,7 @@
 - **Never interpolate a GitHub Actions expression directly into a `run:` shell block** (e.g. `"${{ github.ref_name }}"` inside `bash`) — ref/branch/tag names can contain shell metacharacters (`$()`, backticks) and this is a documented script-injection vector (CWE-78). Pass it through `env:` and reference the env var instead.
 - A job using `softprops/action-gh-release` (or anything writing releases/PRs) needs an explicit `permissions: contents: write` block — don't rely on the repo/org default, which can be read-only.
 - `release.yml`'s tag-push trigger accepts a tag on any commit, not just one that's actually merged to `main`. It fetches `origin/main` and runs `git merge-base --is-ancestor "$GITHUB_SHA" origin/main` before packaging, failing the job otherwise, so a tag can't bypass the Rule 4 "only tag from main" gate.
+- `generate_release_notes: true`'s "What's Changed" list compares against the *previous tag*, not cumulatively from the first release — verified via v1.0.0→v1.0.1→v1.0.2 each showing only what merged in that window, not repeating earlier PRs.
 
 ## Easter Eggs
 
@@ -32,9 +33,3 @@
 
 - Keep lines under 120 characters where practical.
 - This project has no automated test framework for BrightScript — Rule 3's "run tests" step means manually sideloading the build and exercising the changed screen before pushing.
-
-## Test Artifacts
-
-- This section, and the two commits that follow it, are throwaway test PRs merged solely to validate release.yml's `generate_release_notes` changelog output (see i-machine-things/seerr-roku "test dummy PR" trio). Safe to delete once confirmed working.
-- Second dummy entry (2/3) — same purpose as above.
-- Third dummy entry (3/3) — same purpose as above.
