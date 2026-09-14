@@ -17,6 +17,10 @@
 - Don't call `setFocus(true)` on a screen's wrapper node right after `appendChild` if that screen's own `init()` already focused one of its children — the second call re-targets the plain `Group`, which isn't visually focusable, so the first arrow-key press gets eaten by Roku's default focus-recovery instead of your screen's own navigation logic. Found via real "have to scroll before anything selects" feedback on `LoginScreen` (`AppScene.brs::showLogin`).
 - A legacy `Dialog` node's `buttons` press only sets `buttonSelected` — it does **not** dismiss the dialog. Always `observeField("buttonSelected", ...)` and explicitly set `dialog.close = true` in the handler, or the dialog stays stuck until Back.
 
+## UI / Design Fidelity
+
+- **When asked to match another app's screen, verify which exact screen/flow a reference image shows before copying it** — a screenshot titled generically can be the wrong auth flow entirely. A "Login with Seerr" screenshot turned out to be Seerr's local-account login (`LocalLogin.tsx`), not the Jellyfin login (`JellyfinLogin.tsx`) this app actually implements — different heading, different fields, no Plex button. Pulling the actual source (colors, copy, component structure) beat guessing from a picture.
+
 ## CI / GitHub Actions
 
 - **Never interpolate a GitHub Actions expression directly into a `run:` shell block** (e.g. `"${{ github.ref_name }}"` inside `bash`) — ref/branch/tag names can contain shell metacharacters (`$()`, backticks) and this is a documented script-injection vector (CWE-78). Pass it through `env:` and reference the env var instead.
