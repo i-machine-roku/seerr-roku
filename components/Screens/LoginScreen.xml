@@ -3,58 +3,68 @@
     <script type="text/brightscript" uri="pkg:/components/Screens/LoginScreen.brs" />
     <interface>
         <field id="loginSuccess" type="boolean" value="false" />
+        <function name="screenShown" />
     </interface>
-    
+
     <children>
-        <!-- A nice dark background gradient or solid color -->
-        <Rectangle id="background" width="1920" height="1080" color="0x0F172AFF" />
-        
-        <!-- Center the entire login form -->
-        <Group translation="[660, 250]">
-            <!-- A nice big logo -->
-            <Poster uri="pkg:/images/logo.png" 
-                    translation="[0, -100]" 
-                    width="600" 
-                    height="120" 
-                    loadDisplayMode="scaleToFit" />
-                   
-            <Label text="Please log in to continue" 
-                   translation="[120, 60]" 
-                   font="font:MediumSystemFont" 
-                   color="0x94A3B8FF" />
+        <Rectangle id="background" width="1920" height="1080" color="0x111827FF" />
 
-            <Label id="statusLabel" 
-                   translation="[0, 130]" 
-                   width="600"
-                   horizAlign="center"
-                   font="font:SmallSystemFont" 
-                   color="0xEF4444FF" />
+        <Poster uri="pkg:/images/logo.png"
+                translation="[760, 90]"
+                width="400"
+                height="150"
+                loadDisplayMode="scaleToFit" />
 
-            <Group id="inputGroup" translation="[0, 180]">
-                <!-- Custom nice buttons -->
-                <Button id="serverUrlBtn" 
-                        text="Server URL: https://" 
-                        translation="[100, 0]" 
-                        minWidth="400" />
-                        
-                <Button id="usernameBtn" 
-                        text="Enter Username" 
-                        translation="[100, 70]" 
-                        minWidth="400" />
-                        
-                <Button id="passwordBtn" 
-                        text="Enter Password" 
-                        translation="[100, 140]" 
-                        minWidth="400" />
-                        
-                <Button id="loginButton" 
-                        text="Login" 
-                        translation="[100, 230]" 
-                        minWidth="400" 
-                        iconUri="" 
-                        focusedIconUri="" />
-            </Group>
-        </Group>
+        <Rectangle id="loginCard" width="760" height="640" translation="[580, 260]" color="0x1F2937E6" />
+
+        <!-- "Login with Jellyfin", not "Login with Seerr" — this app only implements the
+             Jellyfin-auth flow (Seerr's JellyfinLogin.tsx), a different screen from Seerr's
+             own local-account login (which the web UI calls "Login with Seerr"). -->
+        <Label text="Login with Jellyfin"
+               width="640"
+               translation="[640, 300]"
+               horizAlign="center"
+               font="font:LargeBoldSystemFont"
+               color="0xE5E7EBFF" />
+
+        <Label id="statusLabel"
+               width="640"
+               translation="[640, 350]"
+               horizAlign="center"
+               font="font:SmallSystemFont"
+               color="0xEF4444FF"
+               wrap="true" />
+
+        <Label text="Server URL" width="640" translation="[640, 405]" font="font:SmallSystemFont" color="0x94A3B8FF" />
+        <TextEditBox id="serverBox"
+                     translation="[640, 430]"
+                     width="640"
+                     hintText="https://seerr.example.com" />
+
+        <Label text="Username" width="640" translation="[640, 500]" font="font:SmallSystemFont" color="0x94A3B8FF" />
+        <TextEditBox id="usernameBox"
+                     translation="[640, 525]"
+                     width="640"
+                     hintText="Jellyfin username" />
+
+        <Label text="Password" width="640" translation="[640, 595]" font="font:SmallSystemFont" color="0x94A3B8FF" />
+        <TextEditBox id="passwordBox"
+                     translation="[640, 620]"
+                     width="640"
+                     secureMode="true"
+                     hintText="Password" />
+
+        <!-- Registry is the only cross-screen session store this app has (every screen re-reads
+             SeerrAuth.serverUrl/connectSid per API call — see CODING_NOTES.md), so this can't
+             gate whether we write to it at login; it gates whether the session survives past
+             this run. See LoginScreen.brs::onAuthResponse and source/main.brs. -->
+        <CheckList id="saveCredentials" translation="[640, 700]" checkedState="[true]">
+            <ContentNode role="content">
+                <ContentNode title="Save credentials on this device" />
+            </ContentNode>
+        </CheckList>
+
+        <Button id="submit" text="Login" translation="[640, 760]" minWidth="300" />
 
         <ApiTask id="authTask" />
     </children>
