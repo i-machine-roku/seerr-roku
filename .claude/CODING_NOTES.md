@@ -17,6 +17,7 @@
 - On any API failure branch, show `resp.body` (truncated), not just `resp.code` — a bare status code gave no way to diagnose a Seerr-side 500 that only happened for this app's requests, not browser logins. `SearchScreen.brs` already did this; `LoginScreen.brs` didn't, until it needed to.
 - Don't call `setFocus(true)` on a screen's wrapper node right after `appendChild` if that screen's own `init()` already focused one of its children — the second call re-targets the plain `Group`, which isn't visually focusable, so the first arrow-key press gets eaten by Roku's default focus-recovery instead of your screen's own navigation logic. Found via real "have to scroll before anything selects" feedback on `LoginScreen` (`AppScene.brs::showLogin`).
 - A legacy `Dialog` node's `buttons` press only sets `buttonSelected` — it does **not** dismiss the dialog. Always `observeField("buttonSelected", ...)` and explicitly set `dialog.close = true` in the handler, or the dialog stays stuck until Back.
+- `AppScene.brs::onLogout()` used to only swap the visible screen back to `LoginScreen` — it never cleared `SeerrAuth`, so the session silently came back on the next app launch (`AppScene.init()`'s registry check would still find it valid). A "logout" action that only changes the current view, without also clearing whatever made the app think it was logged in, isn't a real logout.
 
 ## CI / GitHub Actions
 
