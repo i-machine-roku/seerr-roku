@@ -32,3 +32,7 @@
 
 - Keep lines under 120 characters where practical.
 - This project has no automated test framework for BrightScript — Rule 3's "run tests" step means manually sideloading the build and exercising the changed screen before pushing.
+
+## Test Artifacts
+
+- This section, and the two commits that follow it, are throwaway test PRs merged solely to validate release.yml's `generate_release_notes` changelog output (see i-machine-things/seerr-roku "test dummy PR" trio). Safe to delete once confirmed working.
