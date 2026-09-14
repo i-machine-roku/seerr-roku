@@ -11,21 +11,24 @@
              rotating backdrops from), and behind the rotating posters once they load. -->
         <Rectangle id="background" width="1920" height="1080" color="0x111827FF" />
 
-        <!-- Rotating trending backdrops, matching Seerr's own login (ImageFader): two Posters
-             crossfaded via Animation, swapped every 6s by backdropTimer. Only runs when
-             m.serverUrl is already known (a returning user) — a first-time user hasn't told us
-             which server to ask /api/v1/backdrops on yet, so this stays hidden for them. -->
+        <!-- Rotating trending backdrops, inspired by Seerr's own login (ImageFader) but on a
+             slower, TV-appropriate rhythm: Seerr's own 6s/300ms web timing was tried first and
+             found distracting on a screen you sit across a room from, not a browser tab you're
+             looking straight at — deliberately slowed to 60s display / 10s crossfade instead.
+             Two Posters crossfaded via Animation, swapped every 60s by backdropTimer. Only runs
+             when m.serverUrl is already known (a returning user) — a first-time user hasn't told
+             us which server to ask /api/v1/backdrops on yet, so this stays hidden for them. -->
         <Poster id="backdropA" width="1920" height="1080" loadDisplayMode="zoomAbsolute" opacity="0" />
         <Poster id="backdropB" width="1920" height="1080" loadDisplayMode="zoomAbsolute" opacity="0" />
         <!-- Simplified from the web login's top-to-bottom gradient (SceneGraph Rectangle has no
              gradient fill) to a flat dark scrim, same intent: keep the card legible over a photo. -->
         <Rectangle id="backdropScrim" width="1920" height="1080" color="0x111827B3" />
 
-        <Animation id="backdropCrossfade" duration="0.3" easeFunction="linear">
+        <Animation id="backdropCrossfade" duration="10" easeFunction="linear">
             <FloatFieldInterpolator id="fadeOutInterp" key="[0.0, 1.0]" keyValue="[1.0, 0.0]" />
             <FloatFieldInterpolator id="fadeInInterp" key="[0.0, 1.0]" keyValue="[0.0, 1.0]" />
         </Animation>
-        <Timer id="backdropTimer" duration="6" repeat="true" />
+        <Timer id="backdropTimer" duration="60" repeat="true" />
         <ApiTask id="backdropsTask" />
 
         <!-- Large centered brand lockup, above the card, mirroring the web login -->

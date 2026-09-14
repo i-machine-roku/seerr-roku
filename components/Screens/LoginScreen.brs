@@ -69,8 +69,9 @@ sub onBackdropTimerFire()
     showNextBackdrop()
 end sub
 
-' Crossfades to the next trending backdrop, matching Seerr's ImageFader (6s rotation,
-' 300ms opacity crossfade — see backdropTimer/backdropCrossfade in LoginScreen.xml).
+' Crossfades to the next trending backdrop. Slower than Seerr's own web ImageFader
+' (6s/300ms) by design — that rhythm read as distracting on a TV; this uses a 60s
+' display / 10s crossfade instead (see backdropTimer/backdropCrossfade in LoginScreen.xml).
 sub showNextBackdrop()
     if m.backdropPaths.Count() = 0 then return
 
