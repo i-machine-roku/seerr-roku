@@ -29,12 +29,12 @@
 With Developer Mode already enabled (see Installation below), Roku has a built-in capture tool — no extra software needed. Note this only captures the sideloaded app's own UI (screens like the ones above), not video/content playback.
 
 - **From the browser:** open the same developer web installer page you use to sideload (`http://<roku-ip>`, logged in as `rokudev`) — there's a **Screenshot** link that captures and downloads the app's current screen.
-- **From the command line** (requires the same `rokudev` credentials as the web installer — the dev web server rejects unauthenticated requests):
+- **From the command line** (requires the same `rokudev` credentials as the web installer — the dev web server rejects unauthenticated requests). Passing just the username makes `curl` prompt for the password interactively, so it's never typed into a command or a file:
   ```bash
-  curl -u rokudev:YOUR_DEV_PASSWORD -d '' http://<roku-ip>:8060/plugin_inspect
-  curl -u rokudev:YOUR_DEV_PASSWORD http://<roku-ip>:8060/pkgs/dev.jpg -o screenshot.jpg
+  curl -u rokudev -d '' http://<roku-ip>:8060/plugin_inspect
+  curl -u rokudev http://<roku-ip>:8060/pkgs/dev.jpg -o screenshot.jpg
   ```
-  Navigate to the screen you want first, then run both commands.
+  Navigate to the screen you want first, then run both commands (each will ask for the dev password once).
 
 </details>
 
