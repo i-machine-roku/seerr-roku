@@ -1,0 +1,13 @@
+# Confirmed false positives — verified by hand, not real secrets.
+# Format: <commit>:<file>:<rule-id>:<line> (gitleaks fingerprint)
+#
+# curl -u rokudev:YOUR_DEV_PASSWORD in README.md's screenshot-capture instructions —
+# an obvious placeholder, not a real credential. Fixed in a later commit on this same
+# branch (curl -u rokudev alone, prompting interactively instead), but the mistake
+# stays visible in history rather than being rewritten away — see PR #5 discussion.
+232ea62f4712972e4e78bffb876a8370709d6e03:README.md:curl-auth-user:34
+232ea62f4712972e4e78bffb876a8370709d6e03:README.md:curl-auth-user:35
+#
+# Same pattern, written as an illustrative example in CODING_NOTES.md's note about
+# this exact false positive.
+104c8883ef15ee95924734953991a864eb0ecff2:.claude/CODING_NOTES.md:curl-auth-user:10
