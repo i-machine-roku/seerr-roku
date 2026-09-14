@@ -17,7 +17,7 @@
 
 ### 🖼️ Screenshots
 
-> **Placeholders, not real device captures.** These are rendered mockups built from the actual SceneGraph layout/colors, not screenshots taken on a Roku — real captures are easy to get (see below) and these should be swapped for the genuine article. The login screen mockup also depicts the in-progress restyle from #4, not what's currently on `main`.
+> **Placeholders, not real device captures.** These are rendered mockups built from the actual SceneGraph layout/colors, not screenshots taken on a Roku — real captures are easy to get (see below) and these should be swapped for the genuine article. The login screen mockup predates the current inline-field login and doesn't reflect it yet.
 
 | Login | Dashboard |
 | --- | --- |
@@ -78,8 +78,9 @@ The app will immediately launch on your TV!
 When you launch SeerrRoku for the first time, you will be presented with a login screen.
 1. **Server URL:** Enter the full URL to your Seerr or Jellyseerr instance (e.g., `https://request.mydomain.com`). Make sure to include `http://` or `https://`. If you use `http://`, you'll be shown a warning before your credentials are sent unencrypted — `https://` is strongly recommended.
 2. **Username & Password:** Enter your **Jellyfin** sign-in credentials (the same ones you use to log into Jellyfin itself) — not a Plex or local Seerr/Overseerr account.
+3. **Save credentials on this device:** A toggle button, ON by default. Leave it ON to skip re-entering your server URL and username next time you launch the app; switch it OFF if this is a shared or borrowed Roku and you'd rather nothing survive after you close the app.
 
-The app securely stores your server URL and session token locally on your Roku's registry and connects directly to your server. Logging out via the Dashboard's Logout option clears all of it; your password is never stored in the first place.
+The app securely stores your server URL, username, and session token locally on your Roku's registry and connects directly to your server. Your password is never stored. Logging out via the Dashboard's Logout option clears all of it immediately; if "Save credentials on this device" is OFF, it's also cleared automatically as soon as you close the app, even without logging out first.
 
 ---
 

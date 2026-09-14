@@ -2,14 +2,19 @@ sub init()
     m.serverUrlBtn = m.top.findNode("serverUrlBtn")
     m.usernameBtn = m.top.findNode("usernameBtn")
     m.passwordBtn = m.top.findNode("passwordBtn")
+    m.saveCredentialsBtn = m.top.findNode("saveCredentialsBtn")
     m.loginButton = m.top.findNode("loginButton")
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
-    
+
+    ' Linear tab order for onKeyEvent's up/down handling below.
+    m.focusOrder = [m.serverUrlBtn, m.usernameBtn, m.passwordBtn, m.saveCredentialsBtn, m.loginButton]
+
     sec = CreateObject("roRegistrySection", "SeerrAuth")
     m.serverUrl = ""
     if sec.Exists("serverUrl") then m.serverUrl = sec.Read("serverUrl")
     m.username = ""
+    if sec.Exists("lastUsername") then m.username = sec.Read("lastUsername")
     m.password = ""
 
     if m.serverUrl <> "" then
@@ -17,16 +22,50 @@ sub init()
     else
         m.serverUrlBtn.text = "Server URL: (tap to set)"
     end if
-    m.usernameBtn.text = "Username: (tap to set)"
+    if m.username <> "" then
+        m.usernameBtn.text = "Username: " + m.username
+    else
+        m.usernameBtn.text = "Username: (tap to set)"
+    end if
     m.passwordBtn.text = "Password: (tap to set)"
-    
+
+    m.saveCredentials = true
+    if sec.Exists("saveCredentials") then m.saveCredentials = (sec.Read("saveCredentials") = "true")
+    updateSaveCredentialsText()
+
     m.serverUrlBtn.observeField("buttonSelected", "onServerUrlSelected")
     m.usernameBtn.observeField("buttonSelected", "onUsernameSelected")
     m.passwordBtn.observeField("buttonSelected", "onPasswordSelected")
+    m.saveCredentialsBtn.observeField("buttonSelected", "onSaveCredentialsToggled")
     m.loginButton.observeField("buttonSelected", "onLoginSelected")
     m.authTask.observeField("response", "onAuthResponse")
-    
-    m.serverUrlBtn.setFocus(true)
+end sub
+
+' Called explicitly by AppScene.showLogin() right after appendChild — i.e. after this
+' node is actually attached to the live scene tree. setFocus() called any earlier (e.g.
+' from init(), which runs during CreateObject() before attachment) doesn't reliably
+' register with the platform focus manager. See CODING_NOTES.md's focus-timing note.
+sub screenShown()
+    if m.serverUrl = "" then
+        m.serverUrlBtn.setFocus(true)
+    else if m.username = "" then
+        m.usernameBtn.setFocus(true)
+    else
+        m.passwordBtn.setFocus(true)
+    end if
+end sub
+
+sub updateSaveCredentialsText()
+    if m.saveCredentials then
+        m.saveCredentialsBtn.text = "Save credentials on this device: ON"
+    else
+        m.saveCredentialsBtn.text = "Save credentials on this device: OFF"
+    end if
+end sub
+
+sub onSaveCredentialsToggled()
+    m.saveCredentials = not m.saveCredentials
+    updateSaveCredentialsText()
 end sub
 
 sub onServerUrlSelected()
@@ -87,37 +126,29 @@ sub onPasswordDialogComplete(event)
         m.passwordBtn.text = "Password: " + String(Len(m.password), "*")
     end if
     dialog.close = true
-    m.loginButton.setFocus(true)
+    m.saveCredentialsBtn.setFocus(true)
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
-    handled = false
-    if press then
-        if key = "down" then
-            if m.serverUrlBtn.hasFocus() then
-                m.usernameBtn.setFocus(true)
-                handled = true
-            else if m.usernameBtn.hasFocus() then
-                m.passwordBtn.setFocus(true)
-                handled = true
-            else if m.passwordBtn.hasFocus() then
-                m.loginButton.setFocus(true)
-                handled = true
-            end if
-        else if key = "up" then
-            if m.loginButton.hasFocus() then
-                m.passwordBtn.setFocus(true)
-                handled = true
-            else if m.passwordBtn.hasFocus() then
-                m.usernameBtn.setFocus(true)
-                handled = true
-            else if m.usernameBtn.hasFocus() then
-                m.serverUrlBtn.setFocus(true)
-                handled = true
-            end if
+    if not press then return false
+
+    idx = -1
+    for i = 0 to m.focusOrder.Count() - 1
+        if m.focusOrder[i].hasFocus() then
+            idx = i
+            exit for
         end if
+    end for
+    if idx = -1 then return false
+
+    if key = "down" and idx < m.focusOrder.Count() - 1
+        m.focusOrder[idx + 1].setFocus(true)
+        return true
+    else if key = "up" and idx > 0
+        m.focusOrder[idx - 1].setFocus(true)
+        return true
     end if
-    return handled
+    return false
 end function
 
 sub onLoginSelected()
@@ -175,12 +206,22 @@ sub onAuthResponse()
                 end if
             end if
         end if
-        
+
+        ' connectSid/serverUrl are always written — they're the only cross-screen session
+        ' store this app has, so every other screen breaks mid-session without them. The
+        ' toggle instead controls whether main.brs wipes them when the channel actually
+        ' closes (see forgetSessionIfNotSaved), not whether they're written at all.
         sec = CreateObject("roRegistrySection", "SeerrAuth")
         sec.Write("connectSid", cookieStr)
         sec.Write("serverUrl", m.serverUrl)
+        sec.Write("lastUsername", m.username)
+        if m.saveCredentials then
+            sec.Write("saveCredentials", "true")
+        else
+            sec.Write("saveCredentials", "false")
+        end if
         sec.Flush()
-        
+
         m.top.loginSuccess = true
     else
         m.statusLabel.text = "Login failed. Code: " + resp.code.toStr() + " Body: " + Left(resp.body, 200)

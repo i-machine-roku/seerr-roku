@@ -46,10 +46,12 @@ sub showLogin()
     m.loginView = CreateObject("roSGNode", "LoginScreen")
     m.loginView.observeField("loginSuccess", "onLoginSuccess")
     m.contentGroup.appendChild(m.loginView)
-    ' Don't setFocus on m.loginView itself here — LoginScreen.init() already
-    ' focuses its serverUrlBtn. Re-focusing the wrapper Group steals that
-    ' back onto a non-visual node, so the first arrow-key press is wasted on
-    ' Roku's default focus recovery instead of moving between actual fields.
+    ' screenShown() (not setFocus() here, and not from LoginScreen's own init()) is what
+    ' actually requests focus — init() runs during CreateObject(), before appendChild above
+    ' has attached the node to the live tree, and Roku's focus manager doesn't reliably
+    ' honor setFocus() on an unattached node. Calling it here guarantees attachment already
+    ' happened. See CODING_NOTES.md's focus-timing note.
+    m.loginView.screenShown()
 end sub
 
 sub showDashboard()
