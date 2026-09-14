@@ -25,7 +25,21 @@ sub init()
     m.passwordBtn.observeField("buttonSelected", "onPasswordSelected")
     m.loginButton.observeField("buttonSelected", "onLoginSelected")
     m.authTask.observeField("response", "onAuthResponse")
-    
+
+    ' init() runs during CreateObject(), before AppScene.showLogin() appends this node to the
+    ' live scene tree. setFocus() called here doesn't reliably register with the platform focus
+    ' manager until a node is actually attached — the first remote press gets absorbed by Roku's
+    ' own default focus-recovery instead of moving between fields ("scroll down then up before
+    ' anything selects"). Deferring one tick via a zero-duration Timer runs this after
+    ' showLogin()'s (synchronous) appendChild has already happened.
+    m.focusTimer = CreateObject("roSGNode", "Timer")
+    m.focusTimer.duration = 0
+    m.focusTimer.observeField("fire", "onInitialFocusTimer")
+    m.top.appendChild(m.focusTimer)
+    m.focusTimer.control = "start"
+end sub
+
+sub onInitialFocusTimer()
     m.serverUrlBtn.setFocus(true)
 end sub
 
