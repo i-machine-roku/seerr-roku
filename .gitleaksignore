@@ -1,10 +1,11 @@
 # Confirmed false positives — verified by hand, not real secrets.
 # Format: <commit>:<file>:<rule-id>:<line> (gitleaks fingerprint)
 #
-# curl -u rokudev:YOUR_DEV_PASSWORD in README.md's screenshot-capture instructions —
-# an obvious placeholder, not a real credential. Fixed in a later commit on this same
-# branch (curl -u rokudev alone, prompting interactively instead), but the mistake
-# stays visible in history rather than being rewritten away — see PR #5 discussion.
+# A curl basic-auth flag in README.md's screenshot-capture instructions, written with
+# a placeholder value in the username-colon-password shape — not a real credential.
+# Fixed in a later commit on this same branch (username only, prompting interactively
+# instead), but the mistake stays visible in history rather than being rewritten away
+# — see PR #5 discussion.
 232ea62f4712972e4e78bffb876a8370709d6e03:README.md:curl-auth-user:34
 232ea62f4712972e4e78bffb876a8370709d6e03:README.md:curl-auth-user:35
 #
