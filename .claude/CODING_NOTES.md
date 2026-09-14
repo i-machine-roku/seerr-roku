@@ -37,3 +37,4 @@
 
 - This section, and the two commits that follow it, are throwaway test PRs merged solely to validate release.yml's `generate_release_notes` changelog output (see i-machine-things/seerr-roku "test dummy PR" trio). Safe to delete once confirmed working.
 - Second dummy entry (2/3) — same purpose as above.
+- Third dummy entry (3/3) — same purpose as above.
