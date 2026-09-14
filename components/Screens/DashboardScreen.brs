@@ -78,10 +78,7 @@ sub onAuthMeResponse()
             end if
         end if
     else
-        ' A failed/unreachable auth check means the saved session is no longer valid --
-        ' treat it exactly like a logout (AppScene.onLogout clears the stale registry
-        ' entries) instead of sitting on a half-broken Dashboard with no real user data.
-        m.top.logout = true
+        m.userNameLabel.text = "Unknown User"
     end if
 end sub
 
