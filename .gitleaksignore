@@ -12,3 +12,9 @@
 # Same pattern, written as an illustrative example in CODING_NOTES.md's note about
 # this exact false positive.
 104c8883ef15ee95924734953991a864eb0ecff2:.claude/CODING_NOTES.md:curl-auth-user:10
+#
+# This file's own first explanatory comment (above) originally quoted the flagged
+# syntax verbatim to describe it, which gitleaks then flagged as a new instance of
+# the very thing being explained. Reworded without reproducing it; this entry
+# allowlists that earlier, now-superseded wording rather than rewriting it away.
+80917bd31cb5959bdfc49f2e07e9c14c01a9a77b:.gitleaksignore:curl-auth-user:4
