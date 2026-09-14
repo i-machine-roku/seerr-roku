@@ -126,7 +126,7 @@ sub onPasswordDialogComplete(event)
         m.passwordBtn.text = "Password: " + String(Len(m.password), "*")
     end if
     dialog.close = true
-    m.loginButton.setFocus(true)
+    m.saveCredentialsBtn.setFocus(true)
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
