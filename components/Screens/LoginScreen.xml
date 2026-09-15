@@ -88,13 +88,18 @@
              ArrayGrid's own default focus rendering drew an extra background box behind the
              checkbox that wasn't wanted — the checkbox icon is already a clear enough
              focus/state indicator on its own. -->
+        <!-- color/focusedColor pinned to the same value: LabelList's default focusedColor
+             is 0x262626FF (near-black, meant for a light background) and was going almost
+             invisible against this dark card whenever the row gained focus. -->
         <CheckList id="saveCredentials"
                    translation="[660, 620]"
                    checkedState="[true]"
                    itemSize="[600, 60]"
                    itemSpacing="[0, 0]"
                    drawFocusFeedback="false"
-                   focusFootprintBitmapUri="">
+                   focusFootprintBitmapUri=""
+                   color="0xE5E7EBFF"
+                   focusedColor="0xE5E7EBFF">
             <ContentNode role="content">
                 <ContentNode title="Save credentials on this device" />
             </ContentNode>
