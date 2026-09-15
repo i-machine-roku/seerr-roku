@@ -2,13 +2,13 @@ sub init()
     m.serverUrlBtn = m.top.findNode("serverUrlBtn")
     m.usernameBtn = m.top.findNode("usernameBtn")
     m.passwordBtn = m.top.findNode("passwordBtn")
-    m.saveCredentialsBtn = m.top.findNode("saveCredentialsBtn")
+    m.saveCredentialsList = m.top.findNode("saveCredentials")
     m.loginButton = m.top.findNode("loginButton")
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
 
     ' Linear tab order for onKeyEvent's up/down handling below.
-    m.focusOrder = [m.serverUrlBtn, m.usernameBtn, m.passwordBtn, m.saveCredentialsBtn, m.loginButton]
+    m.focusOrder = [m.serverUrlBtn, m.usernameBtn, m.passwordBtn, m.saveCredentialsList, m.loginButton]
 
     sec = CreateObject("roRegistrySection", "SeerrAuth")
     m.serverUrl = ""
@@ -29,14 +29,13 @@ sub init()
     end if
     m.passwordBtn.text = "Password: (tap to set)"
 
-    m.saveCredentials = true
-    if sec.Exists("saveCredentials") then m.saveCredentials = (sec.Read("saveCredentials") = "true")
-    updateSaveCredentialsText()
+    saveCredsDefault = true
+    if sec.Exists("saveCredentials") then saveCredsDefault = (sec.Read("saveCredentials") = "true")
+    m.saveCredentialsList.checkedState = [saveCredsDefault]
 
     m.serverUrlBtn.observeField("buttonSelected", "onServerUrlSelected")
     m.usernameBtn.observeField("buttonSelected", "onUsernameSelected")
     m.passwordBtn.observeField("buttonSelected", "onPasswordSelected")
-    m.saveCredentialsBtn.observeField("buttonSelected", "onSaveCredentialsToggled")
     m.loginButton.observeField("buttonSelected", "onLoginSelected")
     m.authTask.observeField("response", "onAuthResponse")
 end sub
@@ -53,19 +52,6 @@ sub screenShown()
     else
         m.passwordBtn.setFocus(true)
     end if
-end sub
-
-sub updateSaveCredentialsText()
-    if m.saveCredentials then
-        m.saveCredentialsBtn.text = "Save credentials on this device: ON"
-    else
-        m.saveCredentialsBtn.text = "Save credentials on this device: OFF"
-    end if
-end sub
-
-sub onSaveCredentialsToggled()
-    m.saveCredentials = not m.saveCredentials
-    updateSaveCredentialsText()
 end sub
 
 sub onServerUrlSelected()
@@ -126,7 +112,7 @@ sub onPasswordDialogComplete(event)
         m.passwordBtn.text = "Password: " + String(Len(m.password), "*")
     end if
     dialog.close = true
-    m.saveCredentialsBtn.setFocus(true)
+    m.saveCredentialsList.setFocus(true)
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
@@ -215,7 +201,7 @@ sub onAuthResponse()
         sec.Write("connectSid", cookieStr)
         sec.Write("serverUrl", m.serverUrl)
         sec.Write("lastUsername", m.username)
-        if m.saveCredentials then
+        if m.saveCredentialsList.checkedState[0] then
             sec.Write("saveCredentials", "true")
         else
             sec.Write("saveCredentials", "false")
