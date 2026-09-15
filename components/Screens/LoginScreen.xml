@@ -39,23 +39,46 @@
              jellyfin-roku's own SigninScene, but Button+KeyboardDialog is the one pattern in
              this codebase with confirmed real-hardware behavior (TextEditBox renders and
              focuses fine but never entered edit mode on OK/Select on a real device — see
-             CODING_NOTES.md). Every Button here gets showFocusFootprint="true": Roku's default
-             Button draws no background at all when unfocused, so without it these read as
-             floating bulleted text instead of fields, not just a cosmetic nice-to-have. -->
+             CODING_NOTES.md).
+
+             Every Button here fixes three things a real-device pass surfaced:
+             - showFocusFootprint="true": Roku's default Button draws no background at all
+               when unfocused, so without it these read as floating bulleted text.
+             - iconUri="" focusedIconUri="": Button auto-applies a default generic icon
+               (that's what the stray bullet actually was) unless explicitly blanked.
+             - matching minWidth/maxWidth: without maxWidth a Button grows to fit its own
+               text, so longer content (e.g. a typed server URL) made that one button wider
+               than the rest -- fixed width truncates long text instead, which is fine since
+               the KeyboardDialog shows the untruncated value while editing.
+             Height is fixed at 60 (this app renders at FHD scale, where Button's own default
+             height is 96 -- 26px taller than the 70px vertical gap between these buttons,
+             which is why they visually overlapped once a background made that gap visible). -->
         <Button id="serverUrlBtn"
                 text="Server URL: https://"
                 translation="[710, 410]"
-                minWidth="500"
+                minWidth="600"
+                maxWidth="600"
+                height="60"
+                iconUri=""
+                focusedIconUri=""
                 showFocusFootprint="true" />
         <Button id="usernameBtn"
                 text="Enter Username"
                 translation="[710, 480]"
-                minWidth="500"
+                minWidth="600"
+                maxWidth="600"
+                height="60"
+                iconUri=""
+                focusedIconUri=""
                 showFocusFootprint="true" />
         <Button id="passwordBtn"
                 text="Enter Password"
                 translation="[710, 550]"
-                minWidth="500"
+                minWidth="600"
+                maxWidth="600"
+                height="60"
+                iconUri=""
+                focusedIconUri=""
                 showFocusFootprint="true" />
 
         <!-- Registry is the only cross-screen session store this app has (every screen re-reads
@@ -65,13 +88,21 @@
         <Button id="saveCredentialsBtn"
                 text="Save credentials on this device: ON"
                 translation="[710, 620]"
-                minWidth="500"
+                minWidth="600"
+                maxWidth="600"
+                height="60"
+                iconUri=""
+                focusedIconUri=""
                 showFocusFootprint="true" />
 
         <Button id="loginButton"
                 text="Login"
                 translation="[810, 700]"
                 minWidth="300"
+                maxWidth="300"
+                height="60"
+                iconUri=""
+                focusedIconUri=""
                 showFocusFootprint="true" />
 
         <ApiTask id="authTask" />
