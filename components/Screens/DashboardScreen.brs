@@ -20,8 +20,7 @@ sub init()
     sec = CreateObject("roRegistrySection", "SeerrAuth")
     serverUrl = ""
     if sec.Exists("serverUrl") then serverUrl = sec.Read("serverUrl")
-    if serverUrl = "" then serverUrl = "https://request.cybermc.site"
-    
+
     m.authMeTask.requestData = {
         url: serverUrl + "/api/v1/auth/me"
         method: "GET"
@@ -71,15 +70,18 @@ sub onAuthMeResponse()
                 avatarUrl = data.avatar
                 if avatarUrl.StartsWith("/") then
                     sec = CreateObject("roRegistrySection", "SeerrAuth")
-                    serverUrl = "https://request.cybermc.site"
+                    serverUrl = ""
                     if sec.Exists("serverUrl") then serverUrl = sec.Read("serverUrl")
-                    avatarUrl = serverUrl + avatarUrl
+                    if serverUrl <> "" then avatarUrl = serverUrl + avatarUrl
                 end if
                 m.userAvatar.uri = avatarUrl
             end if
         end if
     else
-        m.userNameLabel.text = "Unknown User"
+        ' A failed/unreachable auth check means the saved session is no longer valid --
+        ' treat it exactly like a logout (AppScene.onLogout clears the stale registry
+        ' entries) instead of sitting on a half-broken Dashboard with no real user data.
+        m.top.logout = true
     end if
 end sub
 
