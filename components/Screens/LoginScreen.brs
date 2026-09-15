@@ -21,6 +21,22 @@ sub init()
     ' is handled explicitly for them in onKeyEvent.
     m.focusOrder = [m.serverUrlRow, m.usernameRow, m.passwordRow, m.saveCredentialsList, m.loginRow]
     m.focusBgs = [m.serverUrlBg, m.usernameBg, m.passwordBg, invalid, m.loginBg]
+    ' Login gets its own resting/focused image pair since it's a permanently-colored
+    ' primary button (login_bg.png), not a plain field that's only colored on focus.
+    m.focusBgUnfocusedUris = [
+        "pkg:/images/field_bg.png",
+        "pkg:/images/field_bg.png",
+        "pkg:/images/field_bg.png",
+        "",
+        "pkg:/images/login_bg.png"
+    ]
+    m.focusBgFocusedUris = [
+        "pkg:/images/field_bg_focused.png",
+        "pkg:/images/field_bg_focused.png",
+        "pkg:/images/field_bg_focused.png",
+        "",
+        "pkg:/images/login_bg_focused.png"
+    ]
 
     sec = CreateObject("roRegistrySection", "SeerrAuth")
     m.serverUrl = ""
@@ -54,7 +70,7 @@ sub screenShown()
     end if
 end sub
 
-' Sets focus on m.focusOrder[idx] and updates every row's background color to match --
+' Sets focus on m.focusOrder[idx] and updates every row's background image to match --
 ' the custom Groups have no built-in focus visual of their own (unlike Button), so this
 ' has to be done by hand every time focus moves. Skips invalid entries in m.focusBgs
 ' (the CheckList slot manages its own visuals internally).
@@ -64,9 +80,9 @@ sub focusItem(idx as Integer)
         bg = m.focusBgs[i]
         if bg <> invalid then
             if i = idx then
-                bg.color = &h6366F1FF
+                bg.uri = m.focusBgFocusedUris[i]
             else
-                bg.color = &h283548FF
+                bg.uri = m.focusBgUnfocusedUris[i]
             end if
         end if
     end for

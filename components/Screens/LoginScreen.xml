@@ -15,6 +15,13 @@
                 height="150"
                 loadDisplayMode="scaleToFit" />
 
+        <!-- Visual pass to match Seerr's own web login more closely (rounded, bordered
+             fields, a permanently-colored primary button). Roku's plain Rectangle has no
+             border-radius equivalent, so field_bg*.png/login_bg*.png are pre-rendered
+             rounded-rect images instead (see images/, generated programmatically rather
+             than hand drawn), not flat color fills. A rounded card_bg.png for this card was
+             tried too but didn't render correctly on real hardware, and isn't worth chasing
+             further; plain flat fill here instead. -->
         <Rectangle id="loginCard" width="760" height="640" translation="[580, 260]" color="0x1F2937E6" />
 
         <!-- "Login with Jellyfin", not "Login with Seerr" — this app only implements the
@@ -39,12 +46,15 @@
              hard-coded to "right" in its implementation (verified in brs-scenegraph's
              Button.ts, and confirmed matching real hardware — there's no field to override
              it). A left-aligned field label and a center-aligned Login label need real
-             control over that, so these are plain Groups with our own background Rectangle
+             control over that, so these are plain Groups with our own background Poster
              + Label, and OK is handled explicitly in onKeyEvent below instead of relying on
              Button's native buttonSelected. All four rows are the same 600x60 size, centered
-             under the 760-wide card (card spans x:580-1340, so these start at x:660). -->
+             under the 760-wide card (card spans x:580-1340, so these start at x:660). The
+             *Bg Posters swap between field_bg.png (unfocused) and field_bg_focused.png
+             (focused) in LoginScreen.brs::focusItem, same idea as the old Rectangle color
+             swap but as a rounded-rect image instead of a flat fill. -->
         <Group id="serverUrlRow" translation="[660, 410]" focusable="true">
-            <Rectangle id="serverUrlBg" width="600" height="60" color="0x283548FF" />
+            <Poster id="serverUrlBg" uri="pkg:/images/field_bg.png" width="600" height="60" />
             <Label id="serverUrlLabel"
                    text="Server URL"
                    translation="[20, 17]"
@@ -55,7 +65,7 @@
         </Group>
 
         <Group id="usernameRow" translation="[660, 480]" focusable="true">
-            <Rectangle id="usernameBg" width="600" height="60" color="0x283548FF" />
+            <Poster id="usernameBg" uri="pkg:/images/field_bg.png" width="600" height="60" />
             <Label id="usernameLabel"
                    text="Username"
                    translation="[20, 17]"
@@ -66,7 +76,7 @@
         </Group>
 
         <Group id="passwordRow" translation="[660, 550]" focusable="true">
-            <Rectangle id="passwordBg" width="600" height="60" color="0x283548FF" />
+            <Poster id="passwordBg" uri="pkg:/images/field_bg.png" width="600" height="60" />
             <Label id="passwordLabel"
                    text="Password"
                    translation="[20, 17]"
@@ -129,8 +139,14 @@
             </ContentNode>
         </CheckList>
 
+        <!-- Login is a permanent, always-accent-colored primary button (login_bg.png), like
+             Seerr's own "Sign In" button, instead of only turning accent-colored on focus
+             like the other rows. login_bg_focused.png (a brighter shade, the same accent
+             used for "this row is focused" everywhere else on this screen) swaps in via
+             LoginScreen.brs::focusItem so focus is still clearly visible against the resting
+             color underneath it. -->
         <Group id="loginRow" translation="[660, 700]" focusable="true">
-            <Rectangle id="loginBg" width="600" height="60" color="0x283548FF" />
+            <Poster id="loginBg" uri="pkg:/images/login_bg.png" width="600" height="60" />
             <Label id="loginLabel"
                    text="Login"
                    translation="[0, 17]"
