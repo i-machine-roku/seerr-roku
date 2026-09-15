@@ -99,7 +99,9 @@
                    drawFocusFeedback="false"
                    focusFootprintBitmapUri=""
                    color="0xE5E7EBFF"
-                   focusedColor="0xE5E7EBFF">
+                   focusedColor="0xE5E7EBFF"
+                   focusBitmapBlendColor="0xE5E7EBFF"
+                   focusFootprintBlendColor="0xE5E7EBFF">
             <ContentNode role="content">
                 <ContentNode title="Save credentials on this device" />
             </ContentNode>
