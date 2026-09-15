@@ -35,82 +35,81 @@
                color="0xEF4444FF"
                wrap="true" />
 
-        <!-- Button + KeyboardDialog, not TextEditBox/CheckList: the latter looked more like
-             jellyfin-roku's own SigninScene, but Button+KeyboardDialog is the one pattern in
-             this codebase with confirmed real-hardware behavior (TextEditBox renders and
-             focuses fine but never entered edit mode on OK/Select on a real device — see
-             CODING_NOTES.md).
+        <!-- Custom focusable Group rows, not Button: Button's own text label alignment is
+             hard-coded to "right" in its implementation (verified in brs-scenegraph's
+             Button.ts, and confirmed matching real hardware — there's no field to override
+             it). A left-aligned field label and a center-aligned Login label need real
+             control over that, so these are plain Groups with our own background Rectangle
+             + Label, and OK is handled explicitly in onKeyEvent below instead of relying on
+             Button's native buttonSelected. All four rows are the same 600x60 size, centered
+             under the 760-wide card (card spans x:580-1340, so these start at x:660). -->
+        <Group id="serverUrlRow" translation="[660, 410]" focusable="true">
+            <Rectangle id="serverUrlBg" width="600" height="60" color="0x283548FF" />
+            <Label id="serverUrlLabel"
+                   text="Server URL: https://"
+                   translation="[20, 17]"
+                   width="560"
+                   horizAlign="left"
+                   font="font:MediumSystemFont"
+                   color="0xE5E7EBFF" />
+        </Group>
 
-             Every Button here fixes three things a real-device pass surfaced:
-             - showFocusFootprint="true": Roku's default Button draws no background at all
-               when unfocused, so without it these read as floating bulleted text.
-             - iconUri="" focusedIconUri="": Button auto-applies a default generic icon
-               (that's what the stray bullet actually was) unless explicitly blanked.
-             - matching minWidth/maxWidth: without maxWidth a Button grows to fit its own
-               text, so longer content (e.g. a typed server URL) made that one button wider
-               than the rest -- fixed width truncates long text instead, which is fine since
-               the KeyboardDialog shows the untruncated value while editing.
-             Height is fixed at 60 (this app renders at FHD scale, where Button's own default
-             height is 96 -- 26px taller than the 70px vertical gap between these buttons,
-             which is why they visually overlapped once a background made that gap visible). -->
-        <Button id="serverUrlBtn"
-                text="Server URL: https://"
-                translation="[710, 410]"
-                minWidth="600"
-                maxWidth="600"
-                height="60"
-                iconUri=""
-                focusedIconUri=""
-                showFocusFootprint="true" />
-        <Button id="usernameBtn"
-                text="Enter Username"
-                translation="[710, 480]"
-                minWidth="600"
-                maxWidth="600"
-                height="60"
-                iconUri=""
-                focusedIconUri=""
-                showFocusFootprint="true" />
-        <Button id="passwordBtn"
-                text="Enter Password"
-                translation="[710, 550]"
-                minWidth="600"
-                maxWidth="600"
-                height="60"
-                iconUri=""
-                focusedIconUri=""
-                showFocusFootprint="true" />
+        <Group id="usernameRow" translation="[660, 480]" focusable="true">
+            <Rectangle id="usernameBg" width="600" height="60" color="0x283548FF" />
+            <Label id="usernameLabel"
+                   text="Enter Username"
+                   translation="[20, 17]"
+                   width="560"
+                   horizAlign="left"
+                   font="font:MediumSystemFont"
+                   color="0xE5E7EBFF" />
+        </Group>
+
+        <Group id="passwordRow" translation="[660, 550]" focusable="true">
+            <Rectangle id="passwordBg" width="600" height="60" color="0x283548FF" />
+            <Label id="passwordLabel"
+                   text="Enter Password"
+                   translation="[20, 17]"
+                   width="560"
+                   horizAlign="left"
+                   font="font:MediumSystemFont"
+                   color="0xE5E7EBFF" />
+        </Group>
 
         <!-- Registry is the only cross-screen session store this app has (every screen re-reads
              SeerrAuth.serverUrl/connectSid per API call — see CODING_NOTES.md), so this can't
              gate whether we write to it at login; it gates whether the session survives past
              this run. See LoginScreen.brs::onAuthResponse and source/main.brs.
 
-             CheckList, not another toggle Button: unlike bare Button (confirmed to have zero
-             built-in key handling), CheckList's handleOK() is a real, standard, documented
-             Roku list behavior (not something that only works inside a composite widget the
-             way TextEditBox does) -- verified in brs-scenegraph's own CheckList.ts source.
-             itemSize is set explicitly because ArrayGrid-family nodes default to a width sized
-             for short list items, which silently truncated this label before. -->
+             CheckList, not another custom row: unlike Button and our own Groups above (neither
+             has any built-in key handling), CheckList.handleOK() is a real, standard,
+             documented Roku list behavior — verified directly in brs-scenegraph's own
+             CheckList.ts source. drawFocusFeedback/focusFootprintBitmapUri are blanked because
+             ArrayGrid's own default focus rendering drew an extra background box behind the
+             checkbox that wasn't wanted — the checkbox icon is already a clear enough
+             focus/state indicator on its own. -->
         <CheckList id="saveCredentials"
-                   translation="[710, 620]"
+                   translation="[660, 620]"
                    checkedState="[true]"
                    itemSize="[600, 60]"
-                   itemSpacing="[0, 0]">
+                   itemSpacing="[0, 0]"
+                   drawFocusFeedback="false"
+                   focusFootprintBitmapUri="">
             <ContentNode role="content">
                 <ContentNode title="Save credentials on this device" />
             </ContentNode>
         </CheckList>
 
-        <Button id="loginButton"
-                text="Login"
-                translation="[810, 700]"
-                minWidth="300"
-                maxWidth="300"
-                height="60"
-                iconUri=""
-                focusedIconUri=""
-                showFocusFootprint="true" />
+        <Group id="loginRow" translation="[660, 700]" focusable="true">
+            <Rectangle id="loginBg" width="600" height="60" color="0x283548FF" />
+            <Label id="loginLabel"
+                   text="Login"
+                   translation="[0, 17]"
+                   width="600"
+                   horizAlign="center"
+                   font="font:MediumBoldSystemFont"
+                   color="0xE5E7EBFF" />
+        </Group>
 
         <ApiTask id="authTask" />
     </children>
