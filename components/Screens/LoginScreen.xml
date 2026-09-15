@@ -84,37 +84,48 @@
              CheckList, not another custom row: unlike Button and our own Groups above (neither
              has any built-in key handling), CheckList.handleOK() is a real, standard,
              documented Roku list behavior — verified directly in brs-scenegraph's own
-             CheckList.ts source. drawFocusFeedback/focusFootprintBitmapUri are blanked because
-             ArrayGrid's own default focus rendering drew an extra background box behind the
-             checkbox that wasn't wanted.
+             CheckList.ts source.
 
-             hideIcon="true" on the item plus a text-drawn "[X]"/"[ ]" glyph (kept in sync with
-             checkedState by LoginScreen.brs) instead of Roku's own checkbox icon: real-device
-             testing showed that icon going dark/unreadable on focus no matter which color/
-             blend field was tried (color, focusedColor, focusBitmapBlendColor,
-             focusFootprintBlendColor all made no visible difference), so whatever actually
-             controls its focused-state tint on real firmware isn't one we could find from
-             source alone. The glyph instead goes through drawText with color/focusedColor,
-             the exact mechanism already confirmed working correctly on real hardware for
-             every other label on this screen.
+             Real device screenshots settled the icon-color question: Roku's default
+             checkedIconUri/uncheckedIconUri render as a fixed dark checkmark in every state
+             (focused or not) regardless of color/focusedColor/focusBitmapBlendColor/
+             focusFootprintBlendColor/focusBitmapUri — none of them had any visible effect
+             across several real-device tests. Roku draws that system icon with its own
+             baked-in pixel colors; it isn't tinted by any of these fields at all. Fixed by
+             supplying our own checkbox icon images (images/checkbox_checked.png,
+             images/checkbox_unchecked.png), drawn directly in the same light color as the
+             text, so there's no tint mechanism to depend on. A second pair
+             (images/checkbox_*_focused.png), used only for focusedCheckedIconUri/
+             focusedUncheckedIconUri, draws the identical light checkbox glyph over a solid
+             accent-filled square backdrop, so the checkbox reads the same as always with
+             just a highlight behind it (matching the other rows' solid-fill highlight)
+             instead of the checkbox itself changing color. Text stays the same color
+             throughout regardless (color/focusedColor are pinned equal, same reasoning as
+             above).
 
-             font/focusedFont pinned to match for the same kind of reason: LabelList's
-             default focusedFont is font:MediumBoldSystemFont, so this row's text went bold
-             on focus while every other row on this screen stays the same weight regardless
-             of focus. -->
+             drawFocusFeedback/focusFootprintBitmapUri/focusBitmapUri stay blanked to remove
+             ArrayGrid's own default focus-highlight rendering. font/focusedFont stay pinned
+             to the same value: LabelList's default focusedFont is font:MediumBoldSystemFont,
+             which made this row's text go bold on focus while every other row on this screen
+             stays the same weight regardless of focus. -->
         <CheckList id="saveCredentials"
                    translation="[660, 620]"
                    checkedState="[true]"
                    itemSize="[600, 60]"
                    itemSpacing="[0, 0]"
                    drawFocusFeedback="false"
+                   focusBitmapUri=""
                    focusFootprintBitmapUri=""
                    color="0xE5E7EBFF"
                    focusedColor="0xE5E7EBFF"
                    font="font:MediumSystemFont"
-                   focusedFont="font:MediumSystemFont">
+                   focusedFont="font:MediumSystemFont"
+                   checkedIconUri="pkg:/images/checkbox_checked.png"
+                   uncheckedIconUri="pkg:/images/checkbox_unchecked.png"
+                   focusedCheckedIconUri="pkg:/images/checkbox_checked_focused.png"
+                   focusedUncheckedIconUri="pkg:/images/checkbox_unchecked_focused.png">
             <ContentNode role="content">
-                <ContentNode id="saveCredentialsItem" title="[X] Save credentials on this device" hideIcon="true" />
+                <ContentNode title="Save credentials on this device" />
             </ContentNode>
         </CheckList>
 
