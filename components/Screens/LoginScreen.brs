@@ -33,11 +33,27 @@ sub init()
     updateUsernameLabel()
     updatePasswordLabel()
 
+    m.saveCredentialsItem = m.saveCredentialsList.content.getChild(0)
+
     saveCredsDefault = true
     if sec.Exists("saveCredentials") then saveCredsDefault = (sec.Read("saveCredentials") = "true")
     m.saveCredentialsList.checkedState = [saveCredsDefault]
+    updateSaveCredentialsTitle()
+
+    ' CheckList handles its own OK press internally (see CheckList.handleOK in
+    ' brs-scenegraph's source) and toggles checkedState directly -- observing the field
+    ' is the only way to know it changed, since there's no separate event for it.
+    m.saveCredentialsList.observeField("checkedState", "updateSaveCredentialsTitle")
 
     m.authTask.observeField("response", "onAuthResponse")
+end sub
+
+sub updateSaveCredentialsTitle()
+    if m.saveCredentialsList.checkedState[0] then
+        m.saveCredentialsItem.title = "[X] Save credentials on this device"
+    else
+        m.saveCredentialsItem.title = "[ ] Save credentials on this device"
+    end if
 end sub
 
 ' Called explicitly by AppScene.showLogin() right after appendChild — i.e. after this
