@@ -37,11 +37,26 @@
 
         <!-- Button + KeyboardDialog, not TextEditBox/CheckList: the latter looked more like
              jellyfin-roku's own SigninScene, but Button+KeyboardDialog is the one pattern in
-             this codebase with an actual track record on real hardware (see CODING_NOTES.md's
-             focus-timing history). Not worth trading that for closer visual parity. -->
-        <Button id="serverUrlBtn" text="Server URL: https://" translation="[710, 410]" minWidth="500" />
-        <Button id="usernameBtn" text="Enter Username" translation="[710, 480]" minWidth="500" />
-        <Button id="passwordBtn" text="Enter Password" translation="[710, 550]" minWidth="500" />
+             this codebase with confirmed real-hardware behavior (TextEditBox renders and
+             focuses fine but never entered edit mode on OK/Select on a real device — see
+             CODING_NOTES.md). Every Button here gets showFocusFootprint="true": Roku's default
+             Button draws no background at all when unfocused, so without it these read as
+             floating bulleted text instead of fields, not just a cosmetic nice-to-have. -->
+        <Button id="serverUrlBtn"
+                text="Server URL: https://"
+                translation="[710, 410]"
+                minWidth="500"
+                showFocusFootprint="true" />
+        <Button id="usernameBtn"
+                text="Enter Username"
+                translation="[710, 480]"
+                minWidth="500"
+                showFocusFootprint="true" />
+        <Button id="passwordBtn"
+                text="Enter Password"
+                translation="[710, 550]"
+                minWidth="500"
+                showFocusFootprint="true" />
 
         <!-- Registry is the only cross-screen session store this app has (every screen re-reads
              SeerrAuth.serverUrl/connectSid per API call — see CODING_NOTES.md), so this can't
@@ -50,9 +65,14 @@
         <Button id="saveCredentialsBtn"
                 text="Save credentials on this device: ON"
                 translation="[710, 620]"
-                minWidth="500" />
+                minWidth="500"
+                showFocusFootprint="true" />
 
-        <Button id="loginButton" text="Login" translation="[810, 700]" minWidth="300" />
+        <Button id="loginButton"
+                text="Login"
+                translation="[810, 700]"
+                minWidth="300"
+                showFocusFootprint="true" />
 
         <ApiTask id="authTask" />
     </children>
