@@ -51,7 +51,14 @@ sub showLogin()
     ' has attached the node to the live tree, and Roku's focus manager doesn't reliably
     ' honor setFocus() on an unattached node. Calling it here guarantees attachment already
     ' happened. See CODING_NOTES.md's focus-timing note.
-    m.loginView.screenShown()
+    '
+    ' A custom <function> declared in a component's <interface> block is invoked from
+    ' outside via callFunc(), not a direct method call -- direct dot-call syntax only
+    ' resolves interface *fields*. Calling it as m.loginView.screenShown() crashed with
+    ' "Function Call Operator ( ) attempted on non-function" on every single launch that
+    ' reached showLogin(), confirmed via brs-node CLI emulation (fresh registry, no
+    ' network involved) -- this was the real cause of every "stuck on splash" report.
+    m.loginView.callFunc("screenShown")
 end sub
 
 sub showDashboard()

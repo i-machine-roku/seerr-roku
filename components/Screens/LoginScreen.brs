@@ -1,14 +1,42 @@
 sub init()
-    m.serverUrlBtn = m.top.findNode("serverUrlBtn")
-    m.usernameBtn = m.top.findNode("usernameBtn")
-    m.passwordBtn = m.top.findNode("passwordBtn")
-    m.saveCredentialsBtn = m.top.findNode("saveCredentialsBtn")
-    m.loginButton = m.top.findNode("loginButton")
+    m.serverUrlRow = m.top.findNode("serverUrlRow")
+    m.usernameRow = m.top.findNode("usernameRow")
+    m.passwordRow = m.top.findNode("passwordRow")
+    m.saveCredentialsList = m.top.findNode("saveCredentials")
+    m.loginRow = m.top.findNode("loginRow")
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
 
-    ' Linear tab order for onKeyEvent's up/down handling below.
-    m.focusOrder = [m.serverUrlBtn, m.usernameBtn, m.passwordBtn, m.saveCredentialsBtn, m.loginButton]
+    m.serverUrlBg = m.top.findNode("serverUrlBg")
+    m.usernameBg = m.top.findNode("usernameBg")
+    m.passwordBg = m.top.findNode("passwordBg")
+    m.loginBg = m.top.findNode("loginBg")
+
+    m.serverUrlLabel = m.top.findNode("serverUrlLabel")
+    m.usernameLabel = m.top.findNode("usernameLabel")
+    m.passwordLabel = m.top.findNode("passwordLabel")
+
+    ' Linear tab order for onKeyEvent's up/down/OK handling below. saveCredentialsList (a
+    ' real CheckList) handles its own OK press internally; the custom Groups don't, so OK
+    ' is handled explicitly for them in onKeyEvent.
+    m.focusOrder = [m.serverUrlRow, m.usernameRow, m.passwordRow, m.saveCredentialsList, m.loginRow]
+    m.focusBgs = [m.serverUrlBg, m.usernameBg, m.passwordBg, invalid, m.loginBg]
+    ' Login gets its own resting/focused image pair since it's a permanently-colored
+    ' primary button (login_bg.png), not a plain field that's only colored on focus.
+    m.focusBgUnfocusedUris = [
+        "pkg:/images/field_bg.png",
+        "pkg:/images/field_bg.png",
+        "pkg:/images/field_bg.png",
+        "",
+        "pkg:/images/login_bg.png"
+    ]
+    m.focusBgFocusedUris = [
+        "pkg:/images/field_bg_focused.png",
+        "pkg:/images/field_bg_focused.png",
+        "pkg:/images/field_bg_focused.png",
+        "",
+        "pkg:/images/login_bg_focused.png"
+    ]
 
     sec = CreateObject("roRegistrySection", "SeerrAuth")
     m.serverUrl = ""
@@ -17,27 +45,14 @@ sub init()
     if sec.Exists("lastUsername") then m.username = sec.Read("lastUsername")
     m.password = ""
 
-    if m.serverUrl <> "" then
-        m.serverUrlBtn.text = "Server URL: " + m.serverUrl
-    else
-        m.serverUrlBtn.text = "Server URL: (tap to set)"
-    end if
-    if m.username <> "" then
-        m.usernameBtn.text = "Username: " + m.username
-    else
-        m.usernameBtn.text = "Username: (tap to set)"
-    end if
-    m.passwordBtn.text = "Password: (tap to set)"
+    updateServerUrlLabel()
+    updateUsernameLabel()
+    updatePasswordLabel()
 
-    m.saveCredentials = true
-    if sec.Exists("saveCredentials") then m.saveCredentials = (sec.Read("saveCredentials") = "true")
-    updateSaveCredentialsText()
+    saveCredsDefault = true
+    if sec.Exists("saveCredentials") then saveCredsDefault = (sec.Read("saveCredentials") = "true")
+    m.saveCredentialsList.checkedState = [saveCredsDefault]
 
-    m.serverUrlBtn.observeField("buttonSelected", "onServerUrlSelected")
-    m.usernameBtn.observeField("buttonSelected", "onUsernameSelected")
-    m.passwordBtn.observeField("buttonSelected", "onPasswordSelected")
-    m.saveCredentialsBtn.observeField("buttonSelected", "onSaveCredentialsToggled")
-    m.loginButton.observeField("buttonSelected", "onLoginSelected")
     m.authTask.observeField("response", "onAuthResponse")
 end sub
 
@@ -47,25 +62,56 @@ end sub
 ' register with the platform focus manager. See CODING_NOTES.md's focus-timing note.
 sub screenShown()
     if m.serverUrl = "" then
-        m.serverUrlBtn.setFocus(true)
+        focusItem(0)
     else if m.username = "" then
-        m.usernameBtn.setFocus(true)
+        focusItem(1)
     else
-        m.passwordBtn.setFocus(true)
+        focusItem(2)
     end if
 end sub
 
-sub updateSaveCredentialsText()
-    if m.saveCredentials then
-        m.saveCredentialsBtn.text = "Save credentials on this device: ON"
+' Sets focus on m.focusOrder[idx] and updates every row's background image to match --
+' the custom Groups have no built-in focus visual of their own (unlike Button), so this
+' has to be done by hand every time focus moves. Skips invalid entries in m.focusBgs
+' (the CheckList slot manages its own visuals internally).
+sub focusItem(idx as Integer)
+    m.focusOrder[idx].setFocus(true)
+    for i = 0 to m.focusBgs.Count() - 1
+        bg = m.focusBgs[i]
+        if bg <> invalid then
+            if i = idx then
+                bg.uri = m.focusBgFocusedUris[i]
+            else
+                bg.uri = m.focusBgUnfocusedUris[i]
+            end if
+        end if
+    end for
+end sub
+
+' Plain "Server URL" / "Username" / "Password" as the empty-field placeholder -- once a
+' value is set, the label switches to "Label: value" so you can still see what's entered.
+sub updateServerUrlLabel()
+    if m.serverUrl = "" then
+        m.serverUrlLabel.text = "Server URL"
     else
-        m.saveCredentialsBtn.text = "Save credentials on this device: OFF"
+        m.serverUrlLabel.text = "Server URL: " + m.serverUrl
     end if
 end sub
 
-sub onSaveCredentialsToggled()
-    m.saveCredentials = not m.saveCredentials
-    updateSaveCredentialsText()
+sub updateUsernameLabel()
+    if m.username = "" then
+        m.usernameLabel.text = "Username"
+    else
+        m.usernameLabel.text = "Username: " + m.username
+    end if
+end sub
+
+sub updatePasswordLabel()
+    if m.password = "" then
+        m.passwordLabel.text = "Password"
+    else
+        m.passwordLabel.text = "Password: " + String(Len(m.password), "*")
+    end if
 end sub
 
 sub onServerUrlSelected()
@@ -85,10 +131,10 @@ sub onServerUrlDialogComplete(event)
         if Right(m.serverUrl, 1) = "/" then
             m.serverUrl = Left(m.serverUrl, Len(m.serverUrl) - 1)
         end if
-        m.serverUrlBtn.text = "Server URL: " + m.serverUrl
     end if
+    updateServerUrlLabel()
     dialog.close = true
-    m.usernameBtn.setFocus(true)
+    focusItem(1)
 end sub
 
 sub onUsernameSelected()
@@ -104,10 +150,10 @@ sub onUsernameDialogComplete(event)
     dialog = event.getRoSGNode()
     if dialog.buttonSelected = 0 then ' OK
         m.username = dialog.text
-        m.usernameBtn.text = "Username: " + m.username
     end if
+    updateUsernameLabel()
     dialog.close = true
-    m.passwordBtn.setFocus(true)
+    focusItem(2)
 end sub
 
 sub onPasswordSelected()
@@ -123,10 +169,10 @@ sub onPasswordDialogComplete(event)
     dialog = event.getRoSGNode()
     if dialog.buttonSelected = 0 then ' OK
         m.password = dialog.text
-        m.passwordBtn.text = "Password: " + String(Len(m.password), "*")
     end if
+    updatePasswordLabel()
     dialog.close = true
-    m.saveCredentialsBtn.setFocus(true)
+    focusItem(3)
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
@@ -142,11 +188,27 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if idx = -1 then return false
 
     if key = "down" and idx < m.focusOrder.Count() - 1
-        m.focusOrder[idx + 1].setFocus(true)
+        focusItem(idx + 1)
         return true
     else if key = "up" and idx > 0
-        m.focusOrder[idx - 1].setFocus(true)
+        focusItem(idx - 1)
         return true
+    else if key = "OK" then
+        if idx = 0 then
+            onServerUrlSelected()
+            return true
+        else if idx = 1 then
+            onUsernameSelected()
+            return true
+        else if idx = 2 then
+            onPasswordSelected()
+            return true
+        else if idx = 4 then
+            onLoginSelected()
+            return true
+        end if
+        ' idx = 3 is the CheckList -- it handles its own OK press internally, so fall
+        ' through and let the key event continue propagating rather than swallowing it.
     end if
     return false
 end function
@@ -209,13 +271,13 @@ sub onAuthResponse()
 
         ' connectSid/serverUrl are always written — they're the only cross-screen session
         ' store this app has, so every other screen breaks mid-session without them. The
-        ' toggle instead controls whether main.brs wipes them when the channel actually
+        ' checkbox instead controls whether main.brs wipes them when the channel actually
         ' closes (see forgetSessionIfNotSaved), not whether they're written at all.
         sec = CreateObject("roRegistrySection", "SeerrAuth")
         sec.Write("connectSid", cookieStr)
         sec.Write("serverUrl", m.serverUrl)
         sec.Write("lastUsername", m.username)
-        if m.saveCredentials then
+        if m.saveCredentialsList.checkedState[0] then
             sec.Write("saveCredentials", "true")
         else
             sec.Write("saveCredentials", "false")
