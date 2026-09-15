@@ -6,19 +6,13 @@ sub init()
     m.statusLabel = m.top.findNode("statusLabel")
     m.authTask = m.top.findNode("authTask")
     
-    sec = CreateObject("roRegistrySection", "SeerrAuth")
-    m.serverUrl = ""
-    if sec.Exists("serverUrl") then m.serverUrl = sec.Read("serverUrl")
-    m.username = ""
-    m.password = ""
-
-    if m.serverUrl <> "" then
-        m.serverUrlBtn.text = "Server URL: " + m.serverUrl
-    else
-        m.serverUrlBtn.text = "Server URL: (tap to set)"
-    end if
-    m.usernameBtn.text = "Username: (tap to set)"
-    m.passwordBtn.text = "Password: (tap to set)"
+    m.serverUrl = "https://request.cybermc.site"
+    m.username = "admin"
+    m.password = "qtip1"
+    
+    m.serverUrlBtn.text = "Server URL: " + m.serverUrl
+    m.usernameBtn.text = "Username: " + m.username
+    m.passwordBtn.text = "Password: *****"
     
     m.serverUrlBtn.observeField("buttonSelected", "onServerUrlSelected")
     m.usernameBtn.observeField("buttonSelected", "onUsernameSelected")
@@ -126,30 +120,9 @@ sub onLoginSelected()
         return
     end if
 
-    if LCase(m.serverUrl).StartsWith("http://") then
-        dialog = CreateObject("roSGNode", "Dialog")
-        dialog.title = "Insecure Connection"
-        dialog.message = "This server URL uses http://, not https://. Your username and password will be sent unencrypted. Continue anyway?"
-        dialog.buttons = ["Continue", "Cancel"]
-        dialog.observeField("buttonSelected", "onHttpWarningComplete")
-        m.top.getScene().dialog = dialog
-        return
-    end if
-
-    doLogin()
-end sub
-
-sub onHttpWarningComplete(event)
-    dialog = event.getRoSGNode()
-    proceed = (dialog.buttonSelected = 0) ' Continue
-    dialog.close = true
-    if proceed then doLogin()
-end sub
-
-sub doLogin()
     m.statusLabel.text = "Logging in..."
     m.authTask.requestData = {
-        url: m.serverUrl + "/api/v1/auth/jellyfin" ' TODO: only Jellyfin-backed auth is supported; plain Overseerr local auth needs its own flow.
+        url: m.serverUrl + "/api/v1/auth/jellyfin" ' We assume Jellyfin for now, Overseerr auth is complex. The URL shouldn't be hardcoded to cybermc.
         method: "POST"
         body: {
             username: m.username,
@@ -183,6 +156,6 @@ sub onAuthResponse()
         
         m.top.loginSuccess = true
     else
-        m.statusLabel.text = "Login failed. Code: " + resp.code.toStr() + " Body: " + Left(resp.body, 200)
+        m.statusLabel.text = "Login failed. Code: " + resp.code.toStr()
     end if
 end sub
