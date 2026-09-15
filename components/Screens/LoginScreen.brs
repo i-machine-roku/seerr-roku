@@ -29,17 +29,9 @@ sub init()
     if sec.Exists("lastUsername") then m.username = sec.Read("lastUsername")
     m.password = ""
 
-    if m.serverUrl <> "" then
-        m.serverUrlLabel.text = "Server URL: " + m.serverUrl
-    else
-        m.serverUrlLabel.text = "Server URL: (tap to set)"
-    end if
-    if m.username <> "" then
-        m.usernameLabel.text = "Username: " + m.username
-    else
-        m.usernameLabel.text = "Username: (tap to set)"
-    end if
-    m.passwordLabel.text = "Password: (tap to set)"
+    updateServerUrlLabel()
+    updateUsernameLabel()
+    updatePasswordLabel()
 
     saveCredsDefault = true
     if sec.Exists("saveCredentials") then saveCredsDefault = (sec.Read("saveCredentials") = "true")
@@ -80,6 +72,32 @@ sub focusItem(idx as Integer)
     end for
 end sub
 
+' Plain "Server URL" / "Username" / "Password" as the empty-field placeholder -- once a
+' value is set, the label switches to "Label: value" so you can still see what's entered.
+sub updateServerUrlLabel()
+    if m.serverUrl = "" then
+        m.serverUrlLabel.text = "Server URL"
+    else
+        m.serverUrlLabel.text = "Server URL: " + m.serverUrl
+    end if
+end sub
+
+sub updateUsernameLabel()
+    if m.username = "" then
+        m.usernameLabel.text = "Username"
+    else
+        m.usernameLabel.text = "Username: " + m.username
+    end if
+end sub
+
+sub updatePasswordLabel()
+    if m.password = "" then
+        m.passwordLabel.text = "Password"
+    else
+        m.passwordLabel.text = "Password: " + String(Len(m.password), "*")
+    end if
+end sub
+
 sub onServerUrlSelected()
     dialog = CreateObject("roSGNode", "KeyboardDialog")
     dialog.title = "Enter Server URL (e.g. https://seerr.example.com)"
@@ -97,8 +115,8 @@ sub onServerUrlDialogComplete(event)
         if Right(m.serverUrl, 1) = "/" then
             m.serverUrl = Left(m.serverUrl, Len(m.serverUrl) - 1)
         end if
-        m.serverUrlLabel.text = "Server URL: " + m.serverUrl
     end if
+    updateServerUrlLabel()
     dialog.close = true
     focusItem(1)
 end sub
@@ -116,8 +134,8 @@ sub onUsernameDialogComplete(event)
     dialog = event.getRoSGNode()
     if dialog.buttonSelected = 0 then ' OK
         m.username = dialog.text
-        m.usernameLabel.text = "Username: " + m.username
     end if
+    updateUsernameLabel()
     dialog.close = true
     focusItem(2)
 end sub
@@ -135,8 +153,8 @@ sub onPasswordDialogComplete(event)
     dialog = event.getRoSGNode()
     if dialog.buttonSelected = 0 then ' OK
         m.password = dialog.text
-        m.passwordLabel.text = "Password: " + String(Len(m.password), "*")
     end if
+    updatePasswordLabel()
     dialog.close = true
     focusItem(3)
 end sub

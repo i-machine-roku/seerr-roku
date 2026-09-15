@@ -46,7 +46,7 @@
         <Group id="serverUrlRow" translation="[660, 410]" focusable="true">
             <Rectangle id="serverUrlBg" width="600" height="60" color="0x283548FF" />
             <Label id="serverUrlLabel"
-                   text="Server URL: https://"
+                   text="Server URL"
                    translation="[20, 17]"
                    width="560"
                    horizAlign="left"
@@ -57,7 +57,7 @@
         <Group id="usernameRow" translation="[660, 480]" focusable="true">
             <Rectangle id="usernameBg" width="600" height="60" color="0x283548FF" />
             <Label id="usernameLabel"
-                   text="Enter Username"
+                   text="Username"
                    translation="[20, 17]"
                    width="560"
                    horizAlign="left"
@@ -68,7 +68,7 @@
         <Group id="passwordRow" translation="[660, 550]" focusable="true">
             <Rectangle id="passwordBg" width="600" height="60" color="0x283548FF" />
             <Label id="passwordLabel"
-                   text="Enter Password"
+                   text="Password"
                    translation="[20, 17]"
                    width="560"
                    horizAlign="left"
