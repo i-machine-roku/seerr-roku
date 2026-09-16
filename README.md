@@ -88,3 +88,4 @@ The app securely stores your server URL, username, and session token locally on 
 
 * **Privacy:** This application does not collect, store, or transmit any telemetry or personal data to the developer. All communication is strictly between your Roku device and your self-hosted server. Please review our [Privacy Policy](docs/PRIVACY_POLICY.md) for more details.
 * **Terms of Use:** This is an unofficial, third-party client. It is provided "as is" and is not officially affiliated with Seerr, Jellyfin, or Roku Inc. Please review our [Terms of Use](docs/TERMS_OF_USE.md).
+* **License:** Licensed under the [MIT License](LICENSE). This project began as a fork of [cyberiseeyou/seerr-roku](https://github.com/cyberiseeyou/seerr-roku); the MIT terms were added here to formalize licensing that the original repository never specified.
