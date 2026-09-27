@@ -150,10 +150,11 @@ After every merge to `main`, count commits since the last `v*` tag:
 
 ```bash
 last_tag="$(git describe --tags --match 'v*' --abbrev=0 2>/dev/null || git rev-list --max-parents=0 main)"
-git log "$last_tag"..main --oneline
+git log "$last_tag"..main --format='%s'
 ```
 
-Count by type:
+Count by type (`--format='%s'` prints subjects only; `--oneline` would put the hash first and nothing
+would match):
 - Lines starting with `feat:` → feature count
 - Lines starting with `fix:` → fix count
 
